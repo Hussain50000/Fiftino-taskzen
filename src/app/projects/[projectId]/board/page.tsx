@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo, useEffect, useTransition } from 'react';
@@ -7,9 +6,8 @@ import type { Task, Status, Project, Category } from '@/types';
 import { PageHeader } from '@/components/page-header';
 import { TaskCard } from '@/components/tasks/task-card';
 import { TaskDetailsSheet } from '@/components/tasks/task-details-sheet';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getProjectById, getProjectTasks, updateTask, updateTasks, createTask, getCategories } from '@/lib/actions';
-import { statuses as initialStatuses, users } from '@/lib/data';
+import { statuses as initialStatuses } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 import { BrainCircuit } from 'lucide-react';
 
@@ -54,7 +52,6 @@ export default function ProjectBoardPage() {
     
     fetchData();
   }, [projectId, toast]);
-
 
   const handleTaskUpdate = (updatedTask: Task) => {
     startTransition(async () => {
@@ -144,7 +141,7 @@ export default function ProjectBoardPage() {
         }
     }
     
-    setTasks(newTasks); // Optimistic update
+    setTasks(newTasks);
     handleTasksUpdate(newTasks);
     setDraggedTaskId(null);
   };
@@ -177,35 +174,44 @@ export default function ProjectBoardPage() {
       <PageHeader title={project.name} onTaskCreate={handleTaskCreate} />
       <main className="flex-grow overflow-hidden">
         <div className="h-full overflow-x-auto overflow-y-hidden">
-          <div className="flex h-full gap-6 p-4">
+          <div className="flex h-full gap-4 md:gap-6 p-4">
             {columns.map((column) => (
               <div
                 key={column.id}
-                className="w-[280px] md:w-[320px] flex-shrink-0 flex flex-col"
+                className="w-[300px] sm:w-[320px] md:w-[340px] flex-shrink-0 flex flex-col"
                 onDragOver={handleDragOver}
                 onDrop={(e) => handleDrop(e, column.id as Status)}
               >
-                <div className="flex flex-col h-full bg-muted/80 rounded-lg">
-                  <div className="p-3 flex-shrink-0">
-                    <h3 className="font-semibold text-base flex items-center justify-between">
-                      <span>{column.title}</span>
-                      <span className="text-sm text-muted-foreground">{column.tasks.length}</span>
+                <div className="flex flex-col h-full bg-muted/80 rounded-xl shadow-sm">
+                  <div className="p-4 md:p-5 flex-shrink-0 border-b border-border/50">
+                    <h3 className="font-semibold text-lg md:text-xl flex items-center justify-between">
+                      <span className="text-foreground">{column.title}</span>
+                      <span className="text-base md:text-lg text-muted-foreground bg-muted-foreground/10 px-2 py-1 rounded-full min-w-[28px] text-center">
+                        {column.tasks.length}
+                      </span>
                     </h3>
                   </div>
-                  <div className="flex-grow overflow-y-auto px-3 pb-3">
-                    <div className="flex flex-col gap-3 min-h-[20px]">
-                      {column.tasks.map((task) => (
-                        <div
-                          key={task.id}
-                          draggable
-                          onDragStart={(e) => handleDragStart(e, task.id)}
-                          onDrop={(e) => handleDrop(e, column.id as Status, task.id)}
-                          onClick={() => setSelectedTask(task)}
-                          className="cursor-pointer"
-                        >
-                          <TaskCard task={task} />
+                  
+                  <div className="flex-grow overflow-y-auto px-4 md:px-5">
+                    <div className="flex flex-col gap-4 md:gap-5 py-4 min-h-[100px]">
+                      {column.tasks.length === 0 ? (
+                        <div className="flex items-center justify-center h-24 text-muted-foreground text-sm md:text-base border-2 border-dashed border-muted-foreground/20 rounded-lg">
+                          Drop tasks here
                         </div>
-                      ))}
+                      ) : (
+                        column.tasks.map((task) => (
+                          <div
+                            key={task.id}
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, task.id)}
+                            onDrop={(e) => handleDrop(e, column.id as Status, task.id)}
+                            onClick={() => setSelectedTask(task)}
+                            className="cursor-pointer transform transition-all duration-200 hover:scale-105 active:scale-95"
+                          >
+                            <TaskCard task={task} />
+                          </div>
+                        ))
+                      )}
                     </div>
                   </div>
                 </div>
