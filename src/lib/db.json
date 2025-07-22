@@ -1,99 +1,297 @@
 {
   "projects": [
     {
-      "id": "test-1fdve2",
-      "name": "Test",
-      "taskCount": 7,
-      "imageUrl": "https://placehold.co/600x400?text=Test"
+      "id": "taskzen-app-development-a1b2c3",
+      "name": "TaskZen App Development",
+      "taskCount": 8,
+      "imageUrl": "https://placehold.co/600x400"
+    },
+    {
+      "id": "website-redesign-d4e5f6",
+      "name": "Website Redesign",
+      "taskCount": 0,
+      "imageUrl": "https://placehold.co/600x400"
     }
   ],
   "tasks": [
     {
-      "title": "Sgsgsg",
-      "description": "Shxhdh",
-      "status": "Pending",
-      "categories": [],
-      "subtasks": [],
-      "projectId": "test-1fdve2",
-      "id": "task-1753210399280-y3jx1v"
+      "id": "task-1",
+      "title": "Implement user authentication",
+      "description": "Set up NextAuth.js with email/password and Google providers.",
+      "status": "In Progress",
+      "assignee": {
+        "id": "user-1",
+        "name": "Alisa M.",
+        "avatarUrl": "https://placehold.co/32x32/E9D5FF/6750A4"
+      },
+      "dueDate": "2024-08-25T14:00:00.000Z",
+      "categories": [
+        {
+          "id": "cat-2",
+          "name": "Backend",
+          "color": "#6ee7b7"
+        },
+        {
+          "id": "cat-1",
+          "name": "Frontend",
+          "color": "#86efac"
+        }
+      ],
+      "subtasks": [
+        {
+          "id": "sub-1-1",
+          "text": "Configure NextAuth.js",
+          "completed": true
+        },
+        {
+          "id": "sub-1-2",
+          "text": "Add Google provider",
+          "completed": false
+        },
+        {
+          "id": "sub-1-3",
+          "text": "Create sign-in page UI",
+          "completed": false
+        }
+      ],
+      "projectId": "taskzen-app-development-a1b2c3"
     },
     {
-      "title": "Shdhdbd",
-      "description": "Sbshdh",
+      "id": "task-2",
+      "title": "Design the new dashboard layout",
+      "description": "Create Figma mockups for the new responsive dashboard.",
       "status": "Pending",
-      "categories": [],
-      "subtasks": [],
-      "projectId": "test-1fdve2",
-      "id": "task-1753210409372-dyzzz6"
+      "assignee": {
+        "id": "user-3",
+        "name": "Carla S.",
+        "avatarUrl": "https://placehold.co/32x32/AC92EC/FFFFFF"
+      },
+      "dueDate": "2024-08-27T14:00:00.000Z",
+      "categories": [
+        {
+          "id": "cat-3",
+          "name": "Design",
+          "color": "#fcd34d"
+        }
+      ],
+      "subtasks": [
+        {
+          "id": "sub-2-1",
+          "text": "Mobile view mockup",
+          "completed": false
+        },
+        {
+          "id": "sub-2-2",
+          "text": "Tablet view mockup",
+          "completed": false
+        },
+        {
+          "id": "sub-2-3",
+          "text": "Desktop view mockup",
+          "completed": false
+        }
+      ],
+      "projectId": "taskzen-app-development-a1b2c3"
     },
     {
-      "title": "Shshsh",
-      "description": "Sbshdh",
-      "status": "Pending",
-      "categories": [],
+      "id": "task-3",
+      "title": "Fix API rate limiting issue",
+      "description": "The /api/items endpoint is hitting rate limits from the external service.",
+      "status": "In Progress",
+      "assignee": {
+        "id": "user-2",
+        "name": "Ben C.",
+        "avatarUrl": "https://placehold.co/32x32/C6B5F0/6750A4"
+      },
+      "dueDate": "2024-08-23T14:00:00.000Z",
+      "categories": [
+        {
+          "id": "cat-4",
+          "name": "Bug",
+          "color": "#fca5a5"
+        },
+        {
+          "id": "cat-2",
+          "name": "Backend",
+          "color": "#6ee7b7"
+        }
+      ],
       "subtasks": [],
-      "projectId": "test-1fdve2",
-      "id": "task-1753210431233-azm0fk"
+      "projectId": "taskzen-app-development-a1b2c3"
     },
     {
-      "title": "Shdhd",
-      "description": "Zhdhd",
-      "status": "Pending",
-      "categories": [],
-      "subtasks": [],
-      "projectId": "test-1fdve2",
-      "id": "task-1753218640704-8zs36a"
-    },
-    {
-      "title": "Dhdh",
-      "description": "Xjdhd",
-      "status": "Pending",
-      "dueDate": "2025-07-22T21:00:00.000Z",
-      "categories": [],
-      "subtasks": [],
-      "projectId": "test-1fdve2",
-      "id": "task-1753218665584-8r8dv9"
-    },
-    {
-      "title": "Xhdhd",
-      "description": "Xbdbdb",
-      "status": "Pending",
-      "categories": [],
-      "subtasks": [],
-      "projectId": "test-1fdve2",
-      "id": "task-1753218671491-b05ksr"
-    },
-    {
-      "title": "Test",
-      "description": "Test testing test",
+      "id": "task-4",
+      "title": "Setup CI/CD pipeline",
+      "description": "Configure GitHub Actions to automatically deploy to Vercel.",
       "status": "Complete",
       "assignee": {
         "id": "user-1",
         "name": "Alisa M.",
         "avatarUrl": "https://placehold.co/32x32/E9D5FF/6750A4"
       },
-      "dueDate": "2025-07-23T21:00:00.000Z",
-      "categories": [],
+      "dueDate": "2024-08-20T14:00:00.000Z",
+      "categories": [
+        {
+          "id": "cat-2",
+          "name": "Backend",
+          "color": "#6ee7b7"
+        }
+      ],
       "subtasks": [
         {
-          "id": "subtask-1753219839820-0",
-          "text": "One ",
+          "id": "sub-4-1",
+          "text": "Create deploy.yml",
           "completed": true
         },
         {
-          "id": "subtask-1753219839820-1",
-          "text": "Two",
-          "completed": true
-        },
-        {
-          "id": "subtask-1753219839820-2",
-          "text": "Three",
+          "id": "sub-4-2",
+          "text": "Add Vercel secrets to GitHub",
           "completed": true
         }
       ],
-      "projectId": "test-1fdve2",
-      "id": "task-1753219841816-25swfm"
+      "projectId": "taskzen-app-development-a1b2c3"
+    },
+    {
+      "id": "task-5",
+      "title": "Refactor database schema",
+      "description": "Normalize the `products` table and add indices for performance.",
+      "status": "Pending",
+      "categories": [
+        {
+          "id": "cat-2",
+          "name": "Backend",
+          "color": "#6ee7b7"
+        }
+      ],
+      "subtasks": [],
+      "projectId": "taskzen-app-development-a1b2c3"
+    },
+    {
+      "id": "task-6",
+      "title": "Create onboarding tutorial",
+      "description": "Develop a multi-step tutorial for new users.",
+      "status": "Pending",
+      "assignee": {
+        "id": "user-3",
+        "name": "Carla S.",
+        "avatarUrl": "https://placehold.co/32x32/AC92EC/FFFFFF"
+      },
+      "categories": [
+        {
+          "id": "cat-1",
+          "name": "Frontend",
+          "color": "#86efac"
+        },
+        {
+          "id": "cat-3",
+          "name": "Design",
+          "color": "#fcd34d"
+        }
+      ],
+      "subtasks": [
+        {
+          "id": "sub-6-1",
+          "text": "Write tutorial copy",
+          "completed": false
+        },
+        {
+          "id": "sub-6-2",
+          "text": "Implement tutorial component",
+          "completed": false
+        }
+      ],
+      "projectId": "taskzen-app-development-a1b2c3"
+    },
+    {
+      "id": "task-7",
+      "title": "Optimize image loading performance",
+      "description": "Use next/image for all user-facing images and implement lazy loading.",
+      "status": "Pending",
+      "assignee": {
+        "id": "user-1",
+        "name": "Alisa M.",
+        "avatarUrl": "https://placehold.co/32x32/E9D5FF/6750A4"
+      },
+      "dueDate": "2024-09-01T14:00:00.000Z",
+      "categories": [
+        {
+          "id": "cat-1",
+          "name": "Frontend",
+          "color": "#86efac"
+        }
+      ],
+      "subtasks": [
+        {
+          "id": "sub-7-1",
+          "text": "Replace `<img>` with `<Image>`",
+          "completed": false
+        },
+        {
+          "id": "sub-7-2",
+          "text": "Audit LCP score",
+          "completed": false
+        }
+      ],
+      "projectId": "taskzen-app-development-a1b2c3"
+    },
+    {
+      "id": "task-8",
+      "title": "User profile page redesign",
+      "description": "Redesign the user profile page to be more modern and intuitive.",
+      "status": "Complete",
+      "assignee": {
+        "id": "user-3",
+        "name": "Carla S.",
+        "avatarUrl": "https://placehold.co/32x32/AC92EC/FFFFFF"
+      },
+      "dueDate": "2024-08-17T14:00:00.000Z",
+      "categories": [
+        {
+          "id": "cat-3",
+          "name": "Design",
+          "color": "#fcd34d"
+        }
+      ],
+      "subtasks": [
+        {
+          "id": "sub-8-1",
+          "text": "Finalize color palette",
+          "completed": true
+        },
+        {
+          "id": "sub-8-2",
+          "text": "Implement new layout",
+          "completed": true
+        }
+      ],
+      "projectId": "taskzen-app-development-a1b2c3"
     }
   ],
-  "categories": []
+  "categories": [
+    {
+      "id": "cat-1",
+      "name": "Frontend",
+      "color": "#86efac"
+    },
+    {
+      "id": "cat-2",
+      "name": "Backend",
+      "color": "#6ee7b7"
+    },
+    {
+      "id": "cat-3",
+      "name": "Design",
+      "color": "#fcd34d"
+    },
+    {
+      "id": "cat-4",
+      "name": "Bug",
+      "color": "#fca5a5"
+    },
+    {
+      "id": "cat-5",
+      "name": "Feature",
+      "color": "#a5b4fc"
+    }
+  ]
 }
