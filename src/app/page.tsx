@@ -4,10 +4,8 @@ import React, { useState, useMemo } from 'react';
 import {
   tasks as initialTasks,
   statuses as initialStatuses,
-  users as initialUsers,
-  categories as initialCategories,
 } from '@/lib/data';
-import type { Task, Status, User, Category } from '@/types';
+import type { Task, Status } from '@/types';
 import { PageHeader } from '@/components/page-header';
 import { TaskCard } from '@/components/tasks/task-card';
 import { TaskDetailsSheet } from '@/components/tasks/task-details-sheet';
@@ -25,6 +23,10 @@ export default function BoardPage() {
     if (selectedTask && selectedTask.id === updatedTask.id) {
       setSelectedTask(updatedTask);
     }
+  };
+  
+  const handleTasksUpdate = (updatedTasks: Task[]) => {
+    setTasks(updatedTasks);
   };
 
   const handleTaskCreate = (newTask: Omit<Task, 'id'>) => {
@@ -51,15 +53,35 @@ export default function BoardPage() {
     e.dataTransfer.dropEffect = "move";
   };
   
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, status: Status) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, status: Status, targetTaskId?: string) => {
     e.preventDefault();
+    e.stopPropagation();
+
     if (!draggedTaskId) return;
 
-    const taskToUpdate = tasks.find(t => t.id === draggedTaskId);
-    if (taskToUpdate && taskToUpdate.status !== status) {
-      const updatedTask = { ...taskToUpdate, status };
-      handleTaskUpdate(updatedTask);
+    const draggedTask = tasks.find(t => t.id === draggedTaskId);
+    if (!draggedTask) return;
+
+    let newTasks = tasks.filter(t => t.id !== draggedTaskId);
+    
+    draggedTask.status = status;
+
+    if (targetTaskId) {
+        const targetIndex = newTasks.findIndex(t => t.id === targetTaskId);
+        if (targetIndex !== -1) {
+            newTasks.splice(targetIndex, 0, draggedTask);
+        } else {
+            // If target task not found (e.g., dropping in empty column but somehow got targetId), append to column
+            newTasks = [...newTasks, draggedTask];
+        }
+    } else {
+        // Dropped on a column, not a specific task. Append to end of that column's tasks.
+        const columnTasks = newTasks.filter(t => t.status === status);
+        const otherTasks = newTasks.filter(t => t.status !== status);
+        newTasks = [...otherTasks, ...columnTasks, draggedTask];
     }
+    
+    handleTasksUpdate(newTasks);
     setDraggedTaskId(null);
   };
 
@@ -89,6 +111,7 @@ export default function BoardPage() {
                         key={task.id} 
                         draggable
                         onDragStart={(e) => handleDragStart(e, task.id)}
+                        onDrop={(e) => handleDrop(e, column.id as Status, task.id)}
                         onClick={() => setSelectedTask(task)} 
                         className="cursor-pointer"
                       >
