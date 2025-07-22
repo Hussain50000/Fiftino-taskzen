@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
@@ -22,18 +23,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased h-full">
-        <SidebarProvider>
-          <div className="flex h-full bg-background">
-            <Sidebar collapsible="icon">
-              <AppSidebar />
-            </Sidebar>
-            <SidebarInset>
-              <div className="h-full flex flex-col">
-                {children}
-              </div>
-            </SidebarInset>
-          </div>
-        </SidebarProvider>
+        {children}
         <Toaster />
       </body>
     </html>

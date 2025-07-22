@@ -22,6 +22,7 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { state } = useSidebar();
   const isProjectPage = pathname.startsWith('/projects/');
+  const isDashboard = pathname.startsWith('/dashboard');
 
   return (
     <>
@@ -37,8 +38,8 @@ export function AppSidebar() {
       <SidebarContent className="p-4">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === '/'} className="text-base" tooltip="Projects">
-              <Link href="/">
+            <SidebarMenuButton asChild isActive={isDashboard} className="text-base" tooltip="Projects">
+              <Link href="/dashboard">
                 <Folder />
                 {state === 'expanded' && <span>Projects</span>}
               </Link>
