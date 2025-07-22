@@ -156,13 +156,13 @@ export default function ProjectBoardPage() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader title={project.name} onTaskCreate={handleTaskCreate} />
-      <main className="flex-grow flex flex-col p-4">
-        <div className="flex overflow-x-auto pb-4">
-          <div className="flex gap-6">
+      <main className="flex-grow flex flex-col">
+        <div className="flex-grow overflow-x-auto overflow-y-hidden">
+          <div className="flex h-full gap-6 p-4">
             {columns.map((column) => (
               <div
                 key={column.id}
-                className="w-72 flex-shrink-0 flex flex-col"
+                className="w-[280px] md:w-[320px] flex-shrink-0 flex flex-col"
                 onDragOver={handleDragOver}
                 onDrop={(e) => handleDrop(e, column.id as Status)}
               >
