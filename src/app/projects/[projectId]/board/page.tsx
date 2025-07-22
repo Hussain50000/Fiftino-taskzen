@@ -151,17 +151,22 @@ export default function ProjectBoardPage() {
   
   if (!project) {
     return (
-      <div className="flex-grow flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4 text-center">
+      <div className="flex flex-grow items-center justify-center">
+        <div className="flex flex-col items-center gap-6 text-center">
           <div className="relative flex items-center justify-center">
-            <div className="absolute h-24 w-24 md:h-32 md:w-32 rounded-full bg-primary/10 animate-ping" />
+            <div className="absolute h-32 w-32 rounded-full bg-primary/10 animate-ping" />
             <div className="relative p-4 bg-primary/10 rounded-full">
-              <BrainCircuit className="w-12 h-12 md:w-16 md:w-16 text-primary" />
+              <BrainCircuit className="w-16 h-16 text-primary" />
             </div>
           </div>
-          <p className="text-lg text-muted-foreground">
-            Loading your project...
-          </p>
+          <div className="flex flex-col gap-2">
+              <h1 className="text-4xl font-bold tracking-tight text-foreground">
+                Loading Project...
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Please wait while we get everything ready.
+              </p>
+          </div>
         </div>
       </div>
     );
