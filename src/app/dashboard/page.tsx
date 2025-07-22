@@ -1,14 +1,13 @@
 
 "use client";
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/page-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import { projects as initialProjects } from '@/lib/data';
 import type { Project } from '@/types';
 import {
   Dialog,
@@ -22,38 +21,23 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-
-// This would be a server action in a real app
-const createProject = async (name: string): Promise<Project> => {
-  console.log("Creating project", name);
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-  const randomId = Math.random().toString(36).substring(2, 8);
-
-  const newProject: Project = {
-    id: `${slug}-${randomId}`,
-    name: name,
-    taskCount: 0,
-    imageUrl: `https://placehold.co/600x400?text=${encodeURIComponent(name)}`
-  };
-  
-  // In a real app, you would save this to your database.
-  // For this demo, we're pushing to an in-memory array.
-  initialProjects.push(newProject);
-
-  return newProject;
-};
-
+import { createProject, getProjects } from '@/lib/actions';
 
 export default function ProjectsDashboardPage() {
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [newProjectName, setNewProjectName] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const allProjects = await getProjects();
+      setProjects(allProjects);
+    };
+    fetchProjects();
+  }, []);
 
   const handleCreateProject = () => {
     if (newProjectName.trim() === "") return;
@@ -62,7 +46,8 @@ export default function ProjectsDashboardPage() {
       try {
         const newProject = await createProject(newProjectName);
         
-        const updatedProjects = [...projects, newProject];
+        // Refetch projects to get the latest list
+        const updatedProjects = await getProjects();
         setProjects(updatedProjects);
 
         setNewProjectName("");

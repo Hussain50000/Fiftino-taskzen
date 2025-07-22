@@ -6,6 +6,11 @@ export const users: User[] = [
   { id: 'user-3', name: 'Carla S.', avatarUrl: 'https://placehold.co/32x32/AC92EC/FFFFFF' },
 ];
 
+export const statuses: Status[] = ['Pending', 'In Progress', 'Complete'];
+
+// Note: The initial data below is now written to db.json on first run if the file doesn't exist.
+// Subsequent reads will be from db.json.
+
 export let categories: Category[] = [
   { id: 'cat-1', name: 'Frontend', color: '#86efac' },
   { id: 'cat-2', name: 'Backend', color: '#6ee7b7' },
@@ -13,8 +18,6 @@ export let categories: Category[] = [
   { id: 'cat-4', name: 'Bug', color: '#fca5a5' },
   { id: 'cat-5', name: 'Feature', color: '#a5b4fc' },
 ];
-
-export const statuses: Status[] = ['Pending', 'In Progress', 'Complete'];
 
 export let projects: Project[] = [
     { id: 'taskzen-app-development-a1b2c3', name: 'TaskZen App Development', taskCount: 8, imageUrl: 'https://placehold.co/600x400' },
