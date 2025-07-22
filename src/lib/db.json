@@ -3,7 +3,7 @@
     {
       "id": "test-1fdve2",
       "name": "Test",
-      "taskCount": 3,
+      "taskCount": 6,
       "imageUrl": "https://placehold.co/600x400?text=Test"
     }
   ],
@@ -20,7 +20,7 @@
     {
       "title": "Shdhdbd",
       "description": "Sbshdh",
-      "status": "Complete",
+      "status": "Pending",
       "categories": [],
       "subtasks": [],
       "projectId": "test-1fdve2",
@@ -29,11 +29,39 @@
     {
       "title": "Shshsh",
       "description": "Sbshdh",
-      "status": "In Progress",
+      "status": "Pending",
       "categories": [],
       "subtasks": [],
       "projectId": "test-1fdve2",
       "id": "task-1753210431233-azm0fk"
+    },
+    {
+      "title": "Shdhd",
+      "description": "Zhdhd",
+      "status": "Pending",
+      "categories": [],
+      "subtasks": [],
+      "projectId": "test-1fdve2",
+      "id": "task-1753218640704-8zs36a"
+    },
+    {
+      "title": "Dhdh",
+      "description": "Xjdhd",
+      "status": "Pending",
+      "dueDate": "2025-07-22T21:00:00.000Z",
+      "categories": [],
+      "subtasks": [],
+      "projectId": "test-1fdve2",
+      "id": "task-1753218665584-8r8dv9"
+    },
+    {
+      "title": "Xhdhd",
+      "description": "Xbdbdb",
+      "status": "Pending",
+      "categories": [],
+      "subtasks": [],
+      "projectId": "test-1fdve2",
+      "id": "task-1753218671491-b05ksr"
     }
   ],
   "categories": []
