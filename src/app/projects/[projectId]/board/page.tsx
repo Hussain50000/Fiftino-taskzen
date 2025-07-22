@@ -151,7 +151,7 @@ export default function ProjectBoardPage() {
   
   if (!project) {
     return (
-      <div className="flex flex-grow items-center justify-center">
+      <div className="flex-grow flex items-center justify-center">
         <div className="flex flex-col items-center gap-6 text-center">
           <div className="relative flex items-center justify-center">
             <div className="absolute h-32 w-32 rounded-full bg-primary/10 animate-ping" />
@@ -175,8 +175,8 @@ export default function ProjectBoardPage() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader title={project.name} onTaskCreate={handleTaskCreate} />
-      <main className="flex-grow flex flex-col overflow-hidden">
-        <div className="flex-grow overflow-x-auto overflow-y-hidden">
+      <main className="flex-grow overflow-hidden">
+        <div className="h-full overflow-x-auto overflow-y-hidden">
           <div className="flex h-full gap-6 p-4">
             {columns.map((column) => (
               <div
