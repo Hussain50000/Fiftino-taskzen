@@ -73,18 +73,7 @@
         "avatarUrl": "https://placehold.co/32x32/E9D5FF/6750A4"
       },
       "dueDate": "2025-07-23T21:00:00.000Z",
-      "categories": [
-        {
-          "id": "cat-1753219792027",
-          "name": "Memory help",
-          "color": "#ff0000"
-        },
-        {
-          "id": "cat-1753219799435",
-          "name": "Vitallity",
-          "color": "#ff00ff"
-        }
-      ],
+      "categories": [],
       "subtasks": [
         {
           "id": "subtask-1753219839820-0",
@@ -106,31 +95,5 @@
       "id": "task-1753219841816-25swfm"
     }
   ],
-  "categories": [
-    {
-      "id": "cat-1753219767790",
-      "name": "Self help",
-      "color": "#a855f7"
-    },
-    {
-      "id": "cat-1753219774858",
-      "name": "Motherhood",
-      "color": "#a855f7"
-    },
-    {
-      "id": "cat-1753219783257",
-      "name": "Adulthood",
-      "color": "#ffff00"
-    },
-    {
-      "id": "cat-1753219792027",
-      "name": "Memory help",
-      "color": "#ff0000"
-    },
-    {
-      "id": "cat-1753219799435",
-      "name": "Vitallity",
-      "color": "#ff00ff"
-    }
-  ]
+  "categories": []
 }
