@@ -157,8 +157,8 @@ export default function ProjectBoardPage() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader title={project.name} onTaskCreate={handleTaskCreate} />
-      <div className="flex-grow p-4 overflow-auto">
-        <div className="grid grid-flow-col auto-cols-max gap-6 h-full">
+      <div className="flex-grow p-4 overflow-x-auto">
+        <div className="flex gap-6 h-full">
           {columns.map((column) => (
             <div 
               key={column.id} 
@@ -166,14 +166,14 @@ export default function ProjectBoardPage() {
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, column.id as Status)}
             >
-              <Card className="bg-transparent border-0 shadow-none">
+              <Card className="bg-transparent border-0 shadow-none flex flex-col flex-grow">
                 <CardHeader className="px-1 py-2">
                   <CardTitle className="text-base font-medium flex items-center justify-between">
                     <span>{column.title}</span>
                     <span className="text-sm text-muted-foreground">{column.tasks.length}</span>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="px-1 pt-0">
+                <CardContent className="px-1 pt-0 flex-grow overflow-y-auto">
                   <div className="flex flex-col gap-3 min-h-[50px]">
                     {column.tasks.map((task) => (
                       <div 
