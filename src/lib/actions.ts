@@ -1,3 +1,4 @@
+
 'use server'
 
 import type { Task, Project, Category } from '@/types';
@@ -85,7 +86,10 @@ export async function createCategory(name: string, color: string): Promise<Categ
 }
 
 export async function deleteCategory(categoryId: string): Promise<void> {
-    categories = categories.filter(c => c.id !== categoryId);
+    const index = categories.findIndex(c => c.id === categoryId);
+    if (index > -1) {
+        categories.splice(index, 1);
+    }
     // Also remove this category from any tasks that have it
     tasks.forEach(task => {
       task.categories = task.categories.filter(cat => cat.id !== categoryId)
