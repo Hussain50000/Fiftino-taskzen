@@ -5,13 +5,12 @@ import { useRouter } from 'next/navigation';
 
 export default function ProjectRootPage({ params }: { params: { projectId: string } }) {
   const router = useRouter();
-  const { projectId } = params;
 
   useEffect(() => {
-    if (projectId) {
-      router.replace(`/projects/${projectId}/board`);
+    if (params.projectId) {
+      router.replace(`/projects/${params.projectId}/board`);
     }
-  }, [router, projectId]);
+  }, [router, params.projectId]);
 
   return null; 
 }
