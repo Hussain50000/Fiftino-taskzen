@@ -1,7 +1,7 @@
 
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -31,7 +31,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { categories as initialCategories, statuses, users } from '@/lib/data';
+import { users, statuses } from '@/lib/data';
+import { getCategories, createCategory } from '@/lib/actions';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '@/lib/utils';
 import { Calendar } from '../ui/calendar';
@@ -77,7 +78,7 @@ function getTextColor(hex: string) {
 
 export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const [categories, setCategories] = useState(initialCategories);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [newCategoryName, setNewCategoryName] = useState('');
     const [newCategoryColor, setNewCategoryColor] = useState('#a855f7');
 
@@ -94,6 +95,16 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
             subtasks: [],
         },
     });
+    
+    useEffect(() => {
+        if (isOpen) {
+            const fetchCats = async () => {
+                const cats = await getCategories();
+                setCategories(cats);
+            }
+            fetchCats();
+        }
+    }, [isOpen]);
 
     const { fields, append, remove } = useFieldArray({
         control: form.control,
@@ -122,17 +133,10 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
         setIsOpen(false);
     }
 
-    const handleAddCategory = () => {
+    const handleAddCategory = async () => {
         if (newCategoryName.trim() === '') return;
-        const newCategory: Category = {
-          id: `cat-${Date.now()}`,
-          name: newCategoryName,
-          color: newCategoryColor,
-        };
-        const updatedCategories = [...categories, newCategory];
-        setCategories(updatedCategories);
-        // Also update the global categories array so it's available for next task creations
-        initialCategories.push(newCategory);
+        const newCategory = await createCategory(newCategoryName, newCategoryColor);
+        setCategories(prev => [...prev, newCategory]);
         setNewCategoryName('');
         setNewCategoryColor('#a855f7');
       };
@@ -141,7 +145,6 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
         if (!open) {
             form.reset();
         }
-        setCategories([...initialCategories]);
         setIsOpen(open);
     }
 

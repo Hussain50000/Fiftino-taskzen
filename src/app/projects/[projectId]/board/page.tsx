@@ -1,18 +1,16 @@
 
 "use client";
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useTransition } from 'react';
 import { notFound, useParams } from 'next/navigation';
-import {
-  tasks as initialTasks,
-  statuses as initialStatuses,
-  projects as initialProjects
-} from '@/lib/data';
-import type { Task, Status, Project } from '@/types';
+import type { Task, Status, Project, Category } from '@/types';
 import { PageHeader } from '@/components/page-header';
 import { TaskCard } from '@/components/tasks/task-card';
 import { TaskDetailsSheet } from '@/components/tasks/task-details-sheet';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getProjectById, getProjectTasks, updateTask, updateTasks, createTask, getCategories } from '@/lib/actions';
+import { statuses as initialStatuses, users } from '@/lib/data';
+import { useToast } from '@/hooks/use-toast';
 
 export default function ProjectBoardPage() {
   const params = useParams();
@@ -20,47 +18,80 @@ export default function ProjectBoardPage() {
   
   const [project, setProject] = useState<Project | undefined>();
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
 
   useEffect(() => {
-    const currentProject = initialProjects.find(p => p.id === projectId);
-    if (currentProject) {
-        setProject(currentProject);
-        const projectTasks = initialTasks.filter(t => t.projectId === projectId);
-        setTasks(projectTasks);
-    } else {
-        // Handle project not found, maybe redirect or show a 404
-        // For now, just log it. In a real app, you'd handle this more gracefully.
-        console.error("Project not found!");
-    }
-  }, [projectId]);
+    if (!projectId) return;
+    
+    const fetchData = async () => {
+      try {
+        const [projectData, tasksData, categoriesData] = await Promise.all([
+            getProjectById(projectId),
+            getProjectTasks(projectId),
+            getCategories()
+        ]);
+
+        if (!projectData) {
+          console.error("Project not found!");
+          notFound();
+          return;
+        }
+
+        setProject(projectData);
+        setTasks(tasksData);
+        setCategories(categoriesData);
+
+      } catch (error) {
+        console.error("Failed to fetch project data:", error);
+        toast({ title: "Error", description: "Failed to load project data.", variant: "destructive" });
+      }
+    };
+    
+    fetchData();
+  }, [projectId, toast]);
 
 
   const handleTaskUpdate = (updatedTask: Task) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
-    );
-    if (selectedTask && selectedTask.id === updatedTask.id) {
-      setSelectedTask(updatedTask);
-    }
+    startTransition(async () => {
+      try {
+        const result = await updateTask(updatedTask);
+        setTasks((prevTasks) =>
+          prevTasks.map((task) => (task.id === result.id ? result : task))
+        );
+        if (selectedTask && selectedTask.id === result.id) {
+          setSelectedTask(result);
+        }
+      } catch (error) {
+        toast({ title: "Error", description: "Failed to update task.", variant: "destructive" });
+      }
+    });
   };
   
   const handleTasksUpdate = (updatedTasks: Task[]) => {
-    setTasks(updatedTasks);
+    startTransition(async () => {
+      try {
+        const result = await updateTasks(updatedTasks);
+        setTasks(result);
+      } catch (error) {
+        toast({ title: "Error", description: "Failed to update tasks.", variant: "destructive" });
+      }
+    });
   };
 
-  const handleTaskCreate = (newTask: Omit<Task, 'id' | 'projectId'>) => {
-    const newId = `task-${Date.now()}`;
-    const taskWithId: Task = { ...newTask, id: newId, projectId: projectId };
-    setTasks(prev => [...prev, taskWithId]);
-     // Also update the global tasks array
-    initialTasks.push(taskWithId);
-    // Update project task count
-    const projectIndex = initialProjects.findIndex(p => p.id === projectId);
-    if (projectIndex !== -1) {
-        initialProjects[projectIndex].taskCount++;
-    }
+  const handleTaskCreate = (newTaskData: Omit<Task, 'id' | 'projectId'>) => {
+    startTransition(async () => {
+        try {
+            const taskWithProjectId = { ...newTaskData, projectId };
+            const newTask = await createTask(taskWithProjectId);
+            setTasks(prev => [...prev, newTask]);
+        } catch (error) {
+            toast({ title: "Error", description: "Failed to create task.", variant: "destructive" });
+        }
+    });
   }
 
   const columns = useMemo(() => {
@@ -102,9 +133,18 @@ export default function ProjectBoardPage() {
             newTasks.push(draggedTask);
         }
     } else {
-        newTasks.push(draggedTask);
+        // Find the column's tasks and add to the end
+        const columnTasks = newTasks.filter(t => t.status === status);
+        const lastTaskInColumn = columnTasks[columnTasks.length-1];
+        if (lastTaskInColumn) {
+          const targetIndex = newTasks.findIndex(t => t.id === lastTaskInColumn.id);
+          newTasks.splice(targetIndex + 1, 0, draggedTask);
+        } else {
+          newTasks.push(draggedTask);
+        }
     }
     
+    setTasks(newTasks); // Optimistic update
     handleTasksUpdate(newTasks);
     setDraggedTaskId(null);
   };

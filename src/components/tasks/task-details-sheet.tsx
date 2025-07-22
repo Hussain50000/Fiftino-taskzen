@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState } from 'react';
@@ -51,6 +52,10 @@ function getTextColor(hex: string) {
 export function TaskDetailsSheet({ task, open, onOpenChange, onUpdateTask }: TaskDetailsSheetProps) {
   const [editedTask, setEditedTask] = useState<Task>(task);
 
+  React.useEffect(() => {
+    setEditedTask(task);
+  }, [task]);
+
   const handleUpdate = <K extends keyof Task>(field: K, value: Task[K]) => {
     const updatedTask = { ...editedTask, [field]: value };
     setEditedTask(updatedTask);
@@ -102,7 +107,7 @@ export function TaskDetailsSheet({ task, open, onOpenChange, onUpdateTask }: Tas
                     <Select value={editedTask.assignee?.id} onValueChange={(userId) => handleUpdate('assignee', users.find(u => u.id === userId))}>
                         <SelectTrigger>
                              <SelectValue placeholder={<div className="flex items-center gap-2"><UserCircle className="w-5 h-5" /> Unassigned</div>}>
-                                {editedTask.assignee && (
+                                {editedTask.assignee ? (
                                     <div className="flex items-center gap-2">
                                         <Avatar className="h-6 w-6">
                                             <AvatarImage src={editedTask.assignee.avatarUrl} />
@@ -110,6 +115,8 @@ export function TaskDetailsSheet({ task, open, onOpenChange, onUpdateTask }: Tas
                                         </Avatar>
                                         <span>{editedTask.assignee.name}</span>
                                     </div>
+                                ) : (
+                                    <div className="flex items-center gap-2"><UserCircle className="w-5 h-5" /> Unassigned</div>
                                 )}
                             </SelectValue>
                         </SelectTrigger>
@@ -141,13 +148,13 @@ export function TaskDetailsSheet({ task, open, onOpenChange, onUpdateTask }: Tas
                             )}
                             >
                             <CalendarIcon className="mr-2 h-4 w-4" />
-                            {editedTask.dueDate ? format(editedTask.dueDate, "PPP") : <span>Pick a date</span>}
+                            {editedTask.dueDate ? format(new Date(editedTask.dueDate), "PPP") : <span>Pick a date</span>}
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
                             <Calendar
                             mode="single"
-                            selected={editedTask.dueDate}
+                            selected={editedTask.dueDate ? new Date(editedTask.dueDate) : undefined}
                             onSelect={(date) => handleUpdate('dueDate', date)}
                             initialFocus
                             />

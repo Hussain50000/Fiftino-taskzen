@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "id": "test-1fdve2",
+      "name": "Test",
+      "taskCount": 0,
+      "imageUrl": "https://placehold.co/600x400?text=Test"
+    }
+  ],
+  "tasks": [],
+  "categories": []
+}
