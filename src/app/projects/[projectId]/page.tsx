@@ -1,16 +1,18 @@
 
 'use client';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
-export default function ProjectRootPage({ params }: { params: { projectId: string } }) {
+export default function ProjectRootPage() {
   const router = useRouter();
+  const params = useParams();
+  const projectId = params.projectId as string;
 
   useEffect(() => {
-    if (params.projectId) {
-      router.replace(`/projects/${params.projectId}/board`);
+    if (projectId) {
+      router.replace(`/projects/${projectId}/board`);
     }
-  }, [router, params.projectId]);
+  }, [router, projectId]);
 
   return null; 
 }
