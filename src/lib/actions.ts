@@ -132,3 +132,16 @@ export async function createCategory(name: string, color: string): Promise<Categ
     await writeDb(db);
     return newCategory;
 }
+
+export async function deleteCategory(categoryId: string): Promise<void> {
+    const db = await readDb();
+    db.categories = db.categories.filter(c => c.id !== categoryId);
+    // Also remove this category from any tasks that have it
+    db.tasks = db.tasks.map(task => ({
+        ...task,
+        categories: task.categories.filter(cat => cat.id !== categoryId)
+    }));
+    await writeDb(db);
+}
+
+    

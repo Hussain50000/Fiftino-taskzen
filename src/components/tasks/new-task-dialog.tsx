@@ -32,7 +32,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { users, statuses } from '@/lib/data';
-import { getCategories, createCategory } from '@/lib/actions';
+import { getCategories, createCategory, deleteCategory } from '@/lib/actions';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '@/lib/utils';
 import { Calendar } from '../ui/calendar';
@@ -46,7 +46,7 @@ const taskFormSchema = z.object({
   title: z.string().min(1, "Title is required."),
   description: z.string().optional(),
   status: z.enum(statuses as [string, ...string[]]),
-  assigneeId: z.string().optional(),
+  assigneeName: z.string().optional(),
   categoryIds: z.array(z.string()).optional(),
   dueDate: z.date().optional(),
   subtasks: z.array(z.object({ text: z.string().min(1, "Subtask cannot be empty.") })).optional(),
@@ -89,7 +89,7 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
             title: '',
             description: '',
             status: 'Pending',
-            assigneeId: undefined,
+            assigneeName: '',
             categoryIds: [],
             dueDate: undefined,
             subtasks: [],
@@ -112,7 +112,8 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
     });
 
     function onSubmit(data: TaskFormValues) {
-        const assignee = users.find(u => u.id === data.assigneeId);
+        const assignee = data.assigneeName ? users.find(u => u.name.toLowerCase() === data.assigneeName?.toLowerCase()) : undefined;
+
         const selectedCategories = categories.filter(c => data.categoryIds?.includes(c.id));
         const subtasks = data.subtasks?.map((st, index) => ({
             id: `subtask-${Date.now()}-${index}`,
@@ -140,6 +141,11 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
         setNewCategoryName('');
         setNewCategoryColor('#a855f7');
       };
+      
+    const handleRemoveCategory = async (categoryId: string) => {
+        await deleteCategory(categoryId);
+        setCategories(prev => prev.filter(c => c.id !== categoryId));
+    }
     
     const handleOpenChange = (open: boolean) => {
         if (!open) {
@@ -214,27 +220,15 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
                                         />
                                         <FormField
                                             control={form.control}
-                                            name="assigneeId"
+                                            name="assigneeName"
                                             render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Assignee</FormLabel>
-                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                <FormControl>
-                                                    <SelectTrigger>
-                                                    <SelectValue placeholder="Select an assignee" />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="unassigned">Unassigned</SelectItem>
-                                                    {users.map((user) => (
-                                                    <SelectItem key={user.id} value={user.id}>
-                                                        {user.name}
-                                                    </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                                </Select>
-                                                <FormMessage />
-                                            </FormItem>
+                                                <FormItem>
+                                                    <FormLabel>Assignee</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="Enter assignee name" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
                                             )}
                                         />
                                         <div className="sm:col-span-2">
@@ -291,46 +285,49 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
                                                 </div>
                                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                                                 {categories.map((item) => (
-                                                    <FormField
-                                                    key={item.id}
-                                                    control={form.control}
-                                                    name="categoryIds"
-                                                    render={({ field }) => {
-                                                        return (
-                                                        <FormItem
-                                                            key={item.id}
-                                                            className="flex flex-row items-center space-x-3 space-y-0"
+                                                    <div key={item.id} className="flex items-center gap-2">
+                                                        <FormField
+                                                            control={form.control}
+                                                            name="categoryIds"
+                                                            render={({ field }) => (
+                                                                <FormItem className="flex flex-row items-center space-x-3 space-y-0 flex-grow">
+                                                                    <FormControl>
+                                                                        <Checkbox
+                                                                            checked={field.value?.includes(item.id)}
+                                                                            onCheckedChange={(checked) => {
+                                                                                return checked
+                                                                                    ? field.onChange([...(field.value || []), item.id])
+                                                                                    : field.onChange(field.value?.filter((value) => value !== item.id));
+                                                                            }}
+                                                                        />
+                                                                    </FormControl>
+                                                                    <FormLabel className="font-normal flex items-center text-sm">
+                                                                        <Badge
+                                                                            style={{
+                                                                                backgroundColor: item.color,
+                                                                                color: getTextColor(item.color),
+                                                                                borderColor: item.color,
+                                                                            }}
+                                                                            variant="outline"
+                                                                            className="mr-2 h-4 text-xs px-2"
+                                                                        >
+                                                                            <span className="truncate">{item.name}</span>
+                                                                        </Badge>
+                                                                    </FormLabel>
+                                                                </FormItem>
+                                                            )}
+                                                        />
+                                                        <Button
+                                                            type="button"
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-6 w-6 flex-shrink-0"
+                                                            onClick={() => handleRemoveCategory(item.id)}
                                                         >
-                                                            <FormControl>
-                                                            <Checkbox
-                                                                checked={field.value?.includes(item.id)}
-                                                                onCheckedChange={(checked) => {
-                                                                return checked
-                                                                    ? field.onChange([...(field.value || []), item.id])
-                                                                    : field.onChange(
-                                                                        field.value?.filter(
-                                                                        (value) => value !== item.id
-                                                                        )
-                                                                    )
-                                                                }}
-                                                            />
-                                                            </FormControl>
-                                                            <FormLabel className="font-normal flex items-center text-sm">
-                                                                <Badge 
-                                                                    style={{ 
-                                                                        backgroundColor: item.color, 
-                                                                        color: getTextColor(item.color), 
-                                                                        borderColor: item.color 
-                                                                    }} 
-                                                                    variant="outline" 
-                                                                    className="mr-2 h-4 text-xs px-2"
-                                                                />
-                                                                <span className="truncate">{item.name}</span>
-                                                            </FormLabel>
-                                                        </FormItem>
-                                                        )
-                                                    }}
-                                                    />
+                                                            <Trash className="h-3 w-3" />
+                                                            <span className="sr-only">Remove category</span>
+                                                        </Button>
+                                                    </div>
                                                 ))}
                                                 </div>
                                                 <FormMessage />
@@ -424,3 +421,5 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
         </Dialog>
     )
 }
+
+    
