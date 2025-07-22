@@ -3,10 +3,38 @@
     {
       "id": "test-1fdve2",
       "name": "Test",
-      "taskCount": 0,
+      "taskCount": 3,
       "imageUrl": "https://placehold.co/600x400?text=Test"
     }
   ],
-  "tasks": [],
+  "tasks": [
+    {
+      "title": "Sgsgsg",
+      "description": "Shxhdh",
+      "status": "Pending",
+      "categories": [],
+      "subtasks": [],
+      "projectId": "test-1fdve2",
+      "id": "task-1753210399280-y3jx1v"
+    },
+    {
+      "title": "Shdhdbd",
+      "description": "Sbshdh",
+      "status": "Complete",
+      "categories": [],
+      "subtasks": [],
+      "projectId": "test-1fdve2",
+      "id": "task-1753210409372-dyzzz6"
+    },
+    {
+      "title": "Shshsh",
+      "description": "Sbshdh",
+      "status": "In Progress",
+      "categories": [],
+      "subtasks": [],
+      "projectId": "test-1fdve2",
+      "id": "task-1753210431233-azm0fk"
+    }
+  ],
   "categories": []
 }
