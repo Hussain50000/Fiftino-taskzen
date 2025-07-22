@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getProjectById, getProjectTasks, updateTask, updateTasks, createTask, getCategories } from '@/lib/actions';
 import { statuses as initialStatuses, users } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
+import { BrainCircuit } from 'lucide-react';
 
 export default function ProjectBoardPage() {
   const params = useParams();
@@ -149,8 +150,21 @@ export default function ProjectBoardPage() {
   };
   
   if (!project) {
-    // This can be a loading spinner
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="relative flex items-center justify-center">
+            <div className="absolute h-32 w-32 rounded-full bg-primary/10 animate-ping" />
+            <div className="relative p-4 bg-primary/10 rounded-full">
+              <BrainCircuit className="w-16 h-16 text-primary" />
+            </div>
+          </div>
+          <p className="text-lg text-muted-foreground">
+            Loading your project...
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
