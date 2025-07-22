@@ -23,8 +23,8 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased h-full">
         <SidebarProvider>
-          <div className="flex h-full">
-            <Sidebar>
+          <div className="flex h-full bg-background">
+            <Sidebar collapsible="icon">
               <AppSidebar />
             </Sidebar>
             <SidebarInset>

@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, List, Tag, BrainCircuit } from 'lucide-react';
+import { LayoutGrid, List, BrainCircuit } from 'lucide-react';
 
 import {
   SidebarHeader,
@@ -13,12 +13,14 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
+  useSidebar,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { Separator } from '@/components/ui/separator';
 import { Button } from '../ui/button';
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { state } = useSidebar();
 
   return (
     <>
@@ -27,25 +29,25 @@ export function AppSidebar() {
             <Button variant="ghost" size="icon" className="rounded-full bg-primary/10 hover:bg-primary/20">
                 <BrainCircuit className="text-primary" />
             </Button>
-            <h1 className="text-xl font-semibold">Fiftino TaskZen</h1>
+            {state === 'expanded' && <h1 className="text-xl font-semibold">Fiftino TaskZen</h1>}
         </div>
       </SidebarHeader>
-      <Separator />
+      <SidebarSeparator />
       <SidebarContent className="p-4">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === '/'} className="text-base">
+            <SidebarMenuButton asChild isActive={pathname === '/'} className="text-base" tooltip="Board">
               <Link href="/">
                 <LayoutGrid />
-                Board
+                {state === 'expanded' && <span>Board</span>}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === '/list'} className="text-base">
+            <SidebarMenuButton asChild isActive={pathname === '/list'} className="text-base" tooltip="List">
               <Link href="/list">
                 <List />
-                List
+                {state === 'expanded' && <span>List</span>}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
