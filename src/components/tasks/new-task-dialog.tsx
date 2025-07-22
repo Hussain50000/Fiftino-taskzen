@@ -152,7 +152,7 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="w-[95vw] sm:max-w-lg md:max-w-xl flex flex-col max-h-[90vh]">
-                <DialogHeader>
+                <DialogHeader className="flex-shrink-0">
                     <DialogTitle>Create New Task</DialogTitle>
                     <DialogDescription>
                         Fill in the details below to add a new task to your board.
@@ -160,8 +160,8 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-grow min-h-0">
-                        <ScrollArea className="flex-grow pr-6 -mr-6">
-                            <div className="space-y-4">
+                        <ScrollArea className="flex-grow min-h-0 pr-6 -mr-6">
+                            <div className="space-y-4 py-4">
                                 <FormField
                                     control={form.control}
                                     name="title"
@@ -392,3 +392,5 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
         </Dialog>
     )
 }
+
+    
