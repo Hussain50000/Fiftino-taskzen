@@ -56,6 +56,7 @@ interface NewTaskDialogProps {
 
 export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const [categories, setCategories] = useState(initialCategories);
 
     const form = useForm<TaskFormValues>({
         resolver: zodResolver(taskFormSchema),
@@ -77,7 +78,7 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
 
     function onSubmit(data: TaskFormValues) {
         const assignee = users.find(u => u.id === data.assigneeId);
-        const selectedCategories = initialCategories.filter(c => data.categoryIds?.includes(c.id));
+        const selectedCategories = categories.filter(c => data.categoryIds?.includes(c.id));
         const subtasks = data.subtasks?.map((st, index) => ({
             id: `subtask-${Date.now()}-${index}`,
             text: st.text,
@@ -96,9 +97,17 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
         form.reset();
         setIsOpen(false);
     }
+    
+    const handleOpenChange = (open: boolean) => {
+        if (open) {
+            // Refresh categories when dialog opens
+            setCategories([...initialCategories]);
+        }
+        setIsOpen(open);
+    }
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-2xl">
                 <DialogHeader>
@@ -232,7 +241,7 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
                                         <FormItem>
                                         <FormLabel>Categories</FormLabel>
                                         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                                        {initialCategories.map((item) => (
+                                        {categories.map((item) => (
                                             <FormField
                                             key={item.id}
                                             control={form.control}
