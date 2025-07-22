@@ -30,7 +30,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { categories, statuses, users } from '@/lib/data';
+import { categories as initialCategories, statuses, users } from '@/lib/data';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '@/lib/utils';
 import { Calendar } from '../ui/calendar';
@@ -77,7 +77,7 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
 
     function onSubmit(data: TaskFormValues) {
         const assignee = users.find(u => u.id === data.assigneeId);
-        const selectedCategories = categories.filter(c => data.categoryIds?.includes(c.id));
+        const selectedCategories = initialCategories.filter(c => data.categoryIds?.includes(c.id));
         const subtasks = data.subtasks?.map((st, index) => ({
             id: `subtask-${Date.now()}-${index}`,
             text: st.text,
@@ -232,7 +232,7 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
                                         <FormItem>
                                         <FormLabel>Categories</FormLabel>
                                         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                                        {categories.map((item) => (
+                                        {initialCategories.map((item) => (
                                             <FormField
                                             key={item.id}
                                             control={form.control}
