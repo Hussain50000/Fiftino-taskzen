@@ -151,7 +151,7 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
     return (
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="w-[95vw] sm:max-w-lg md:max-w-xl flex flex-col max-h-[90vh]">
+            <DialogContent className="w-[95vw] max-w-[425px] sm:max-w-lg md:max-w-xl h-[90vh] flex flex-col">
                 <DialogHeader className="flex-shrink-0">
                     <DialogTitle>Create New Task</DialogTitle>
                     <DialogDescription>
@@ -159,228 +159,260 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-grow min-h-0">
-                        <ScrollArea className="flex-grow min-h-0 pr-6 -mr-6">
-                            <div className="space-y-4 py-4">
-                                <FormField
-                                    control={form.control}
-                                    name="title"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Title</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="e.g. Design the landing page" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="description"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Description</FormLabel>
-                                            <FormControl>
-                                                <Textarea placeholder="Add more details about the task..." {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <FormField
-                                    control={form.control}
-                                    name="status"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Status</FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full overflow-hidden">
+                        <div className="flex-1 overflow-hidden">
+                            <ScrollArea className="h-full px-1">
+                                <div className="space-y-6 pr-4 pb-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="title"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Title</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="e.g. Design the landing page" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="description"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Description</FormLabel>
+                                                <FormControl>
+                                                    <Textarea placeholder="Add more details about the task..." {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="status"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Status</FormLabel>
+                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                        <FormControl>
+                                                            <SelectTrigger>
+                                                                <SelectValue placeholder="Select a status" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            {statuses.map(status => (
+                                                                <SelectItem key={status} value={status}>{status}</SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="assigneeId"
+                                            render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Assignee</FormLabel>
+                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
                                                     <SelectTrigger>
-                                                        <SelectValue placeholder="Select a status" />
+                                                    <SelectValue placeholder="Select an assignee" />
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    {statuses.map(status => (
-                                                        <SelectItem key={status} value={status}>{status}</SelectItem>
+                                                    <SelectItem value="unassigned">Unassigned</SelectItem>
+                                                    {users.map((user) => (
+                                                    <SelectItem key={user.id} value={user.id}>
+                                                        {user.name}
+                                                    </SelectItem>
                                                     ))}
                                                 </SelectContent>
-                                            </Select>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                 <FormField
-                                    control={form.control}
-                                    name="assigneeId"
-                                    render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Assignee</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                            <SelectValue placeholder="Select an assignee" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="unassigned">Unassigned</SelectItem>
-                                            {users.map((user) => (
-                                            <SelectItem key={user.id} value={user.id}>
-                                                {user.name}
-                                            </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                    )}
-                                />
-                                 <FormField
-                                    control={form.control}
-                                    name="dueDate"
-                                    render={({ field }) => (
-                                    <FormItem className="flex flex-col">
-                                        <FormLabel>Due Date</FormLabel>
-                                        <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                            <Button
-                                                variant={'outline'}
-                                                className={cn(
-                                                'w-full pl-3 text-left font-normal',
-                                                !field.value && 'text-muted-foreground'
-                                                )}
-                                            >
-                                                {field.value ? (
-                                                format(field.value, 'PPP')
-                                                ) : (
-                                                <span>Pick a date</span>
-                                                )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar
-                                            mode="single"
-                                            selected={field.value}
-                                            onSelect={field.onChange}
-                                            disabled={(date) => date < new Date('1900-01-01')}
-                                            initialFocus
-                                            />
-                                        </PopoverContent>
-                                        </Popover>
-                                        <FormMessage />
-                                    </FormItem>
-                                    )}
-                                />
-                                </div>
-                                <div className="space-y-4">
-                                    <FormField
-                                        control={form.control}
-                                        name="categoryIds"
-                                        render={() => (
-                                            <FormItem>
-                                            <div className="mb-4">
-                                                <FormLabel>Categories</FormLabel>
-                                                <p className="text-sm text-muted-foreground">Select existing categories or add a new one.</p>
-                                            </div>
-                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                                            {categories.map((item) => (
-                                                <FormField
-                                                key={item.id}
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                            )}
+                                        />
+                                        <div className="sm:col-span-2">
+                                            <FormField
                                                 control={form.control}
-                                                name="categoryIds"
-                                                render={({ field }) => {
-                                                    return (
-                                                    <FormItem
-                                                        key={item.id}
-                                                        className="flex flex-row items-center space-x-3 space-y-0"
-                                                    >
+                                                name="dueDate"
+                                                render={({ field }) => (
+                                                <FormItem className="flex flex-col">
+                                                    <FormLabel>Due Date</FormLabel>
+                                                    <Popover>
+                                                    <PopoverTrigger asChild>
                                                         <FormControl>
-                                                        <Checkbox
-                                                            checked={field.value?.includes(item.id)}
-                                                            onCheckedChange={(checked) => {
-                                                            return checked
-                                                                ? field.onChange([...(field.value || []), item.id])
-                                                                : field.onChange(
-                                                                    field.value?.filter(
-                                                                    (value) => value !== item.id
-                                                                    )
-                                                                )
-                                                            }}
-                                                        />
+                                                        <Button
+                                                            variant={'outline'}
+                                                            className={cn(
+                                                            'w-full pl-3 text-left font-normal',
+                                                            !field.value && 'text-muted-foreground'
+                                                            )}
+                                                        >
+                                                            {field.value ? (
+                                                            format(field.value, 'PPP')
+                                                            ) : (
+                                                            <span>Pick a date</span>
+                                                            )}
+                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                        </Button>
                                                         </FormControl>
-                                                        <FormLabel className="font-normal flex items-center">
-                                                            <Badge style={{ backgroundColor: item.color, color: getTextColor(item.color), borderColor: item.color }} variant="outline" className="mr-2 h-5" />
-                                                            {item.name}
-                                                        </FormLabel>
-                                                    </FormItem>
-                                                    )
-                                                }}
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-auto p-0" align="start">
+                                                        <Calendar
+                                                        mode="single"
+                                                        selected={field.value}
+                                                        onSelect={field.onChange}
+                                                        disabled={(date) => date < new Date('1900-01-01')}
+                                                        initialFocus
+                                                        />
+                                                    </PopoverContent>
+                                                    </Popover>
+                                                    <FormMessage />
+                                                </FormItem>
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="categoryIds"
+                                            render={() => (
+                                                <FormItem>
+                                                <div className="mb-4">
+                                                    <FormLabel>Categories</FormLabel>
+                                                    <p className="text-sm text-muted-foreground">Select existing categories or add a new one.</p>
+                                                </div>
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                {categories.map((item) => (
+                                                    <FormField
+                                                    key={item.id}
+                                                    control={form.control}
+                                                    name="categoryIds"
+                                                    render={({ field }) => {
+                                                        return (
+                                                        <FormItem
+                                                            key={item.id}
+                                                            className="flex flex-row items-center space-x-3 space-y-0"
+                                                        >
+                                                            <FormControl>
+                                                            <Checkbox
+                                                                checked={field.value?.includes(item.id)}
+                                                                onCheckedChange={(checked) => {
+                                                                return checked
+                                                                    ? field.onChange([...(field.value || []), item.id])
+                                                                    : field.onChange(
+                                                                        field.value?.filter(
+                                                                        (value) => value !== item.id
+                                                                        )
+                                                                    )
+                                                                }}
+                                                            />
+                                                            </FormControl>
+                                                            <FormLabel className="font-normal flex items-center text-sm">
+                                                                <Badge 
+                                                                    style={{ 
+                                                                        backgroundColor: item.color, 
+                                                                        color: getTextColor(item.color), 
+                                                                        borderColor: item.color 
+                                                                    }} 
+                                                                    variant="outline" 
+                                                                    className="mr-2 h-4 text-xs px-2"
+                                                                />
+                                                                <span className="truncate">{item.name}</span>
+                                                            </FormLabel>
+                                                        </FormItem>
+                                                        )
+                                                    }}
+                                                    />
+                                                ))}
+                                                </div>
+                                                <FormMessage />
+                                            </FormItem>
+                                            )}
+                                        />
+                                        <Separator />
+                                        <div className="space-y-3">
+                                            <Label className="text-sm font-medium">Add New Category</Label>
+                                            <div className="flex flex-col sm:flex-row gap-2">
+                                                <Input
+                                                    value={newCategoryName}
+                                                    onChange={(e) => setNewCategoryName(e.target.value)}
+                                                    placeholder="Category name"
+                                                    className="flex-1"
                                                 />
-                                            ))}
+                                                <div className="flex gap-2">
+                                                    <Input
+                                                        type="color"
+                                                        value={newCategoryColor}
+                                                        onChange={(e) => setNewCategoryColor(e.target.value)}
+                                                        className="w-16 h-10 p-1 flex-shrink-0"
+                                                    />
+                                                    <Button 
+                                                        type="button" 
+                                                        onClick={handleAddCategory}
+                                                        className="flex-shrink-0"
+                                                    >
+                                                        Add
+                                                    </Button>
+                                                </div>
                                             </div>
-                                            <FormMessage />
-                                        </FormItem>
-                                        )}
-                                    />
-                                    <Separator />
-                                    <div>
-                                        <Label className="text-sm font-medium">Add New Category</Label>
-                                        <div className="flex gap-2 mt-2">
-                                            <Input
-                                                value={newCategoryName}
-                                                onChange={(e) => setNewCategoryName(e.target.value)}
-                                                placeholder="New category name"
-                                            />
-                                            <Input
-                                                type="color"
-                                                value={newCategoryColor}
-                                                onChange={(e) => setNewCategoryColor(e.target.value)}
-                                                className="w-12 h-10 p-1"
-                                            />
-                                            <Button type="button" onClick={handleAddCategory}>Add</Button>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <FormLabel>Subtasks</FormLabel>
+                                        <div className="space-y-3">
+                                            {fields.map((field, index) => (
+                                                <div key={field.id} className="flex items-start gap-2">
+                                                    <FormField
+                                                        control={form.control}
+                                                        name={`subtasks.${index}.text`}
+                                                        render={({ field }) => (
+                                                            <FormItem className="flex-1">
+                                                                <FormControl>
+                                                                    <Input 
+                                                                        {...field} 
+                                                                        placeholder="e.g. Create database model" 
+                                                                        className="min-h-[40px]"
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <Button 
+                                                        type="button" 
+                                                        variant="outline" 
+                                                        size="icon" 
+                                                        onClick={() => remove(index)}
+                                                        className="mt-0 flex-shrink-0"
+                                                    >
+                                                        <Trash className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            ))}
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => append({ text: "" })}
+                                                className="w-full sm:w-auto"
+                                            >
+                                                <Plus className="mr-2 h-4 w-4" />
+                                                Add Subtask
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <FormLabel>Subtasks</FormLabel>
-                                    <div className="space-y-2 mt-2">
-                                        {fields.map((field, index) => (
-                                            <div key={field.id} className="flex items-center gap-2">
-                                                <FormField
-                                                    control={form.control}
-                                                    name={`subtasks.${index}.text`}
-                                                    render={({ field }) => (
-                                                         <FormItem className="flex-grow">
-                                                            <FormControl>
-                                                                <Input {...field} placeholder="e.g. Create database model" />
-                                                            </FormControl>
-                                                            <FormMessage/>
-                                                         </FormItem>
-                                                    )}
-                                                />
-                                                <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
-                                                    <Trash className="h-4 w-4" />
-                                                </Button>
-                                            </div>
-                                        ))}
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => append({ text: "" })}
-                                        >
-                                            <Plus className="mr-2 h-4 w-4" />
-                                            Add Subtask
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </ScrollArea>
-                        <DialogFooter className="mt-6 pt-4 border-t flex-shrink-0">
+                            </ScrollArea>
+                        </div>
+                        <DialogFooter className="flex-shrink-0 pt-4 border-t mt-4">
                             <DialogClose asChild>
                                 <Button type="button" variant="secondary">Cancel</Button>
                             </DialogClose>
@@ -392,5 +424,3 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
         </Dialog>
     )
 }
-
-    
