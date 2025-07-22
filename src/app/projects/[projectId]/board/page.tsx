@@ -133,7 +133,6 @@ export default function ProjectBoardPage() {
             newTasks.push(draggedTask);
         }
     } else {
-        // Find the column's tasks and add to the end
         const columnTasks = newTasks.filter(t => t.status === status);
         const lastTaskInColumn = columnTasks[columnTasks.length-1];
         if (lastTaskInColumn) {
@@ -157,43 +156,45 @@ export default function ProjectBoardPage() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader title={project.name} onTaskCreate={handleTaskCreate} />
-      <div className="flex-grow p-4 overflow-x-auto">
-        <div className="flex gap-6 h-full">
-          {columns.map((column) => (
-            <div 
-              key={column.id} 
-              className="w-72 flex-shrink-0 flex flex-col"
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, column.id as Status)}
-            >
-              <Card className="bg-transparent border-0 shadow-none flex flex-col flex-grow">
-                <CardHeader className="px-1 py-2">
-                  <CardTitle className="text-base font-medium flex items-center justify-between">
-                    <span>{column.title}</span>
-                    <span className="text-sm text-muted-foreground">{column.tasks.length}</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="px-1 pt-0 flex-grow overflow-y-auto">
-                  <div className="flex flex-col gap-3 min-h-[50px]">
-                    {column.tasks.map((task) => (
-                      <div 
-                        key={task.id} 
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, task.id)}
-                        onDrop={(e) => handleDrop(e, column.id as Status, task.id)}
-                        onClick={() => setSelectedTask(task)} 
-                        className="cursor-pointer"
-                      >
-                        <TaskCard task={task} />
-                      </div>
-                    ))}
+      <main className="flex-grow flex flex-col p-4">
+        <div className="flex overflow-x-auto pb-4">
+          <div className="flex gap-6">
+            {columns.map((column) => (
+              <div
+                key={column.id}
+                className="w-72 flex-shrink-0 flex flex-col"
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, column.id as Status)}
+              >
+                <div className="flex flex-col flex-grow bg-muted/80 rounded-lg">
+                  <div className="p-3">
+                    <h3 className="font-semibold text-base flex items-center justify-between">
+                      <span>{column.title}</span>
+                      <span className="text-sm text-muted-foreground">{column.tasks.length}</span>
+                    </h3>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-          ))}
+                  <div className="flex-grow overflow-y-auto max-h-[calc(100vh_-_220px)] px-3 pb-3">
+                    <div className="flex flex-col gap-3 min-h-[20px]">
+                      {column.tasks.map((task) => (
+                        <div
+                          key={task.id}
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, task.id)}
+                          onDrop={(e) => handleDrop(e, column.id as Status, task.id)}
+                          onClick={() => setSelectedTask(task)}
+                          className="cursor-pointer"
+                        >
+                          <TaskCard task={task} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </main>
       {selectedTask && (
         <TaskDetailsSheet
           task={selectedTask}
