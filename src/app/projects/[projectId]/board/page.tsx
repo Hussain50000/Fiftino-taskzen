@@ -162,7 +162,7 @@ export default function ProjectBoardPage() {
           {columns.map((column) => (
             <div 
               key={column.id} 
-              className="w-80 shrink-0 flex flex-col"
+              className="w-72 md:w-80 shrink-0 flex flex-col"
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, column.id as Status)}
             >
