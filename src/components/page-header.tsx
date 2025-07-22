@@ -7,7 +7,7 @@ import { useSidebar } from '@/components/ui/sidebar';
 
 interface PageHeaderProps {
   title: string;
-  onTaskCreate: (task: Omit<Task, 'id'>) => void;
+  onTaskCreate: (task: Omit<Task, 'id' | 'projectId'>) => void;
 }
 
 export function PageHeader({ title, onTaskCreate }: PageHeaderProps) {

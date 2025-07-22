@@ -55,7 +55,7 @@ type TaskFormValues = z.infer<typeof taskFormSchema>;
 
 interface NewTaskDialogProps {
   children: React.ReactNode;
-  onTaskCreate: (task: Omit<Task, 'id'>) => void;
+  onTaskCreate: (task: Omit<Task, 'id' | 'projectId'>) => void;
 }
 
 function hexToRgb(hex: string) {

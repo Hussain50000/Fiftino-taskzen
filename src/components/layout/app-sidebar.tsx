@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, List, BrainCircuit } from 'lucide-react';
+import { LayoutGrid, List, BrainCircuit, Folder } from 'lucide-react';
 
 import {
   SidebarHeader,
@@ -21,6 +21,7 @@ import { Button } from '../ui/button';
 export function AppSidebar() {
   const pathname = usePathname();
   const { state } = useSidebar();
+  const isProjectPage = pathname.startsWith('/projects/');
 
   return (
     <>
@@ -36,21 +37,34 @@ export function AppSidebar() {
       <SidebarContent className="p-4">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === '/'} className="text-base" tooltip="Board">
+            <SidebarMenuButton asChild isActive={pathname === '/'} className="text-base" tooltip="Projects">
               <Link href="/">
-                <LayoutGrid />
-                {state === 'expanded' && <span>Board</span>}
+                <Folder />
+                {state === 'expanded' && <span>Projects</span>}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === '/list'} className="text-base" tooltip="List">
-              <Link href="/list">
-                <List />
-                {state === 'expanded' && <span>List</span>}
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {isProjectPage && (
+            <>
+            <SidebarSeparator/>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname.endsWith('/board')} className="text-base" tooltip="Board">
+                  <Link href={`${pathname.substring(0, pathname.lastIndexOf('/'))}/board`}>
+                    <LayoutGrid />
+                    {state === 'expanded' && <span>Board</span>}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname.endsWith('/list')} className="text-base" tooltip="List">
+                  <Link href={`${pathname.substring(0, pathname.lastIndexOf('/'))}/list`}>
+                    <List />
+                    {state === 'expanded' && <span>List</span>}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </>
+          )}
         </SidebarMenu>
       </SidebarContent>
     </>

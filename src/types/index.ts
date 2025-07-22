@@ -27,4 +27,12 @@ export type Task = {
   dueDate?: Date;
   categories: Category[];
   subtasks: Subtask[];
+  projectId: string;
+};
+
+export type Project = {
+  id: string;
+  name: string;
+  taskCount: number;
+  imageUrl: string;
 };

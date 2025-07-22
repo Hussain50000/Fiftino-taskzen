@@ -1,138 +1,110 @@
+
 "use client";
 
-import React, { useState, useMemo } from 'react';
-import {
-  tasks as initialTasks,
-  statuses as initialStatuses,
-} from '@/lib/data';
-import type { Task, Status } from '@/types';
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/page-header';
-import { TaskCard } from '@/components/tasks/task-card';
-import { TaskDetailsSheet } from '@/components/tasks/task-details-sheet';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { projects as initialProjects } from '@/lib/data';
+import type { Project } from '@/types';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
-export default function BoardPage() {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
+export default function ProjectsDashboardPage() {
+  const [projects, setProjects] = useState<Project[]>(initialProjects);
+  const [newProjectName, setNewProjectName] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter();
 
-  const handleTaskUpdate = (updatedTask: Task) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
-    );
-    if (selectedTask && selectedTask.id === updatedTask.id) {
-      setSelectedTask(updatedTask);
-    }
+  const handleCreateProject = () => {
+    if (newProjectName.trim() === "") return;
+
+    const newProject: Project = {
+      id: `proj-${Date.now()}`,
+      name: newProjectName,
+      taskCount: 0,
+      imageUrl: `https://placehold.co/600x400?text=${encodeURIComponent(newProjectName)}`
+    };
+
+    const updatedProjects = [...projects, newProject];
+    setProjects(updatedProjects);
+    initialProjects.push(newProject);
+
+    setNewProjectName("");
+    setIsDialogOpen(false);
+    router.push(`/projects/${newProject.id}`);
   };
   
-  const handleTasksUpdate = (updatedTasks: Task[]) => {
-    setTasks(updatedTasks);
-  };
-
-  const handleTaskCreate = (newTask: Omit<Task, 'id'>) => {
-    const newId = `task-${Date.now()}`;
-    const taskWithId: Task = { ...newTask, id: newId };
-    setTasks(prev => [...prev, taskWithId]);
-  }
-
-  const columns = useMemo(() => {
-    return initialStatuses.map((status) => ({
-      id: status,
-      title: status,
-      tasks: tasks.filter((task) => task.status === status),
-    }));
-  }, [tasks]);
-
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, taskId: string) => {
-    setDraggedTaskId(taskId);
-    e.dataTransfer.effectAllowed = "move";
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-  };
-  
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, status: Status, targetTaskId?: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!draggedTaskId) return;
-
-    const draggedTask = tasks.find(t => t.id === draggedTaskId);
-    if (!draggedTask) return;
-
-    let newTasks = tasks.filter(t => t.id !== draggedTaskId);
-    
-    draggedTask.status = status;
-
-    if (targetTaskId) {
-        const targetIndex = newTasks.findIndex(t => t.id === targetTaskId);
-        if (targetIndex !== -1) {
-            newTasks.splice(targetIndex, 0, draggedTask);
-        } else {
-            // If target task not found (e.g., dropping in empty column but somehow got targetId), append to column
-            newTasks = [...newTasks, draggedTask];
-        }
-    } else {
-        // Dropped on a column, not a specific task. Append to end of that column's tasks.
-        const columnTasks = newTasks.filter(t => t.status === status);
-        const otherTasks = newTasks.filter(t => t.status !== status);
-        newTasks = [...otherTasks, ...columnTasks, draggedTask];
-    }
-    
-    handleTasksUpdate(newTasks);
-    setDraggedTaskId(null);
-  };
-
   return (
     <div className="flex flex-col h-full">
-      <PageHeader title="Board" onTaskCreate={handleTaskCreate} />
-      <div className="flex-grow p-4 overflow-x-auto">
-        <div className="flex gap-6 h-full">
-          {columns.map((column) => (
-            <div 
-              key={column.id} 
-              className="w-80 shrink-0 flex flex-col"
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, column.id as Status)}
-            >
-              <Card className="bg-transparent border-0 shadow-none">
-                <CardHeader className="px-1 py-2">
-                  <CardTitle className="text-base font-medium flex items-center justify-between">
-                    <span>{column.title}</span>
-                    <span className="text-sm text-muted-foreground">{column.tasks.length}</span>
-                  </CardTitle>
+      <header className="flex items-center justify-between p-4 border-b shrink-0">
+        <h1 className="text-2xl font-bold">Projects</h1>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="-ml-1 h-5 w-5" />
+              New Project
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create a new project</DialogTitle>
+              <DialogDescription>
+                Give your new project a name to get started.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-2">
+              <Label htmlFor="projectName">Project Name</Label>
+              <Input 
+                id="projectName"
+                value={newProjectName}
+                onChange={(e) => setNewProjectName(e.target.value)}
+                placeholder="e.g. Q3 Marketing Campaign"
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="secondary" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+              <Button onClick={handleCreateProject}>Create Project</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </header>
+      <div className="flex-grow p-4 overflow-y-auto">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {projects.map((project) => (
+            <Link href={`/projects/${project.id}`} key={project.id}>
+              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer flex flex-col">
+                <div className="aspect-[16/9] bg-muted overflow-hidden rounded-t-lg">
+                  <img 
+                    src={project.imageUrl}
+                    alt={project.name}
+                    data-ai-hint="abstract background"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle>{project.name}</CardTitle>
                 </CardHeader>
-                <CardContent className="px-1 pt-0">
-                  <div className="flex flex-col gap-3 min-h-[50px]">
-                    {column.tasks.map((task) => (
-                      <div 
-                        key={task.id} 
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, task.id)}
-                        onDrop={(e) => handleDrop(e, column.id as Status, task.id)}
-                        onClick={() => setSelectedTask(task)} 
-                        className="cursor-pointer"
-                      >
-                        <TaskCard task={task} />
-                      </div>
-                    ))}
-                  </div>
+                <CardContent className="flex-grow">
+                  <p className="text-sm text-muted-foreground">{project.taskCount} tasks</p>
                 </CardContent>
               </Card>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
-      {selectedTask && (
-        <TaskDetailsSheet
-          task={selectedTask}
-          open={!!selectedTask}
-          onOpenChange={(isOpen) => !isOpen && setSelectedTask(null)}
-          onUpdateTask={handleTaskUpdate}
-        />
-      )}
     </div>
   );
 }

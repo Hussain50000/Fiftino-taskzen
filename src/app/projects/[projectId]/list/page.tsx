@@ -1,11 +1,13 @@
+
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   tasks as initialTasks,
   statuses as initialStatuses,
+  projects as initialProjects
 } from '@/lib/data';
-import type { Task, Status } from '@/types';
+import type { Task, Status, Project } from '@/types';
 import { PageHeader } from '@/components/page-header';
 import { TaskDetailsSheet } from '@/components/tasks/task-details-sheet';
 import {
@@ -36,9 +38,21 @@ function getTextColor(hex: string) {
     return brightness > 128 ? '#000000' : '#FFFFFF';
 }
 
-export default function ListPage() {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+export default function ProjectListPage({ params }: { params: { projectId: string } }) {
+  const [project, setProject] = useState<Project | undefined>();
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
+  useEffect(() => {
+    const currentProject = initialProjects.find(p => p.id === params.projectId);
+    if (currentProject) {
+        setProject(currentProject);
+        const projectTasks = initialTasks.filter(t => t.projectId === params.projectId);
+        setTasks(projectTasks);
+    } else {
+        console.error("Project not found!");
+    }
+  }, [params.projectId]);
 
   const handleTaskUpdate = (updatedTask: Task) => {
     setTasks((prevTasks) =>
@@ -49,10 +63,15 @@ export default function ListPage() {
     }
   };
 
-  const handleTaskCreate = (newTask: Omit<Task, 'id'>) => {
+  const handleTaskCreate = (newTask: Omit<Task, 'id' | 'projectId'>) => {
     const newId = `task-${Date.now()}`;
-    const taskWithId: Task = { ...newTask, id: newId };
+    const taskWithId: Task = { ...newTask, id: newId, projectId: params.projectId };
     setTasks(prev => [...prev, taskWithId]);
+    initialTasks.push(taskWithId);
+    const projectIndex = initialProjects.findIndex(p => p.id === params.projectId);
+    if (projectIndex !== -1) {
+        initialProjects[projectIndex].taskCount++;
+    }
   }
 
   const groupedTasks = useMemo(() => {
@@ -62,9 +81,13 @@ export default function ListPage() {
     }));
   }, [tasks]);
 
+  if (!project) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col h-full">
-      <PageHeader title="List" onTaskCreate={handleTaskCreate} />
+      <PageHeader title={project.name} onTaskCreate={handleTaskCreate} />
       <div className="flex-grow p-4 overflow-y-auto">
         <Accordion type="multiple" defaultValue={initialStatuses as string[]} className="space-y-4">
           {groupedTasks.map(({ status, tasks }) => (
