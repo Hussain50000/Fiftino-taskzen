@@ -10,7 +10,7 @@ export default function ProjectLayout({
   return (
     <SidebarProvider>
       <div className="flex h-full bg-background">
-        <Sidebar collapsible="icon">
+        <Sidebar collapsible="offcanvas">
           <AppSidebar />
         </Sidebar>
         <SidebarInset>

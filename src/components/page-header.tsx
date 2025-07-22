@@ -1,9 +1,10 @@
+
+"use client"
 import type { Task } from '@/types';
 import { NewTaskDialog } from './tasks/new-task-dialog';
 import { Button } from './ui/button';
 import { Plus, Share2 } from 'lucide-react';
-import { SidebarTrigger } from './ui/sidebar';
-import { useSidebar } from '@/components/ui/sidebar';
+import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
 import { useToast } from '@/hooks/use-toast';
 
 interface PageHeaderProps {
