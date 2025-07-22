@@ -175,7 +175,7 @@ export default function ProjectBoardPage() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader title={project.name} onTaskCreate={handleTaskCreate} />
-      <main className="flex-grow flex flex-col">
+      <main className="flex-grow flex flex-col overflow-hidden">
         <div className="flex-grow overflow-x-auto overflow-y-hidden">
           <div className="flex h-full gap-6 p-4">
             {columns.map((column) => (
@@ -185,14 +185,14 @@ export default function ProjectBoardPage() {
                 onDragOver={handleDragOver}
                 onDrop={(e) => handleDrop(e, column.id as Status)}
               >
-                <div className="flex flex-col flex-grow bg-muted/80 rounded-lg">
-                  <div className="p-3">
+                <div className="flex flex-col h-full bg-muted/80 rounded-lg">
+                  <div className="p-3 flex-shrink-0">
                     <h3 className="font-semibold text-base flex items-center justify-between">
                       <span>{column.title}</span>
                       <span className="text-sm text-muted-foreground">{column.tasks.length}</span>
                     </h3>
                   </div>
-                  <div className="flex-grow overflow-y-auto max-h-[calc(100vh_-_220px)] px-3 pb-3">
+                  <div className="flex-grow overflow-y-auto px-3 pb-3">
                     <div className="flex flex-col gap-3 min-h-[20px]">
                       {column.tasks.map((task) => (
                         <div
