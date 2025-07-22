@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -14,7 +15,6 @@ import {
   SidebarFooter,
 } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
-import { CategoryManager } from '@/components/tasks/category-manager';
 import { Button } from '../ui/button';
 
 export function AppSidebar() {
@@ -51,14 +51,6 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="p-4">
-        <CategoryManager>
-          <Button variant="outline" className="w-full justify-start gap-2">
-            <Tag />
-            Manage Categories
-          </Button>
-        </CategoryManager>
-      </SidebarFooter>
     </>
   );
 }

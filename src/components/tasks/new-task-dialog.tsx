@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState } from 'react';
@@ -36,6 +37,9 @@ import { cn } from '@/lib/utils';
 import { Calendar } from '../ui/calendar';
 import { Checkbox } from '../ui/checkbox';
 import { ScrollArea } from '../ui/scroll-area';
+import { Badge } from '../ui/badge';
+import { Separator } from '../ui/separator';
+import { Label } from '../ui/label';
 
 const taskFormSchema = z.object({
   title: z.string().min(1, "Title is required."),
@@ -54,9 +58,29 @@ interface NewTaskDialogProps {
   onTaskCreate: (task: Omit<Task, 'id'>) => void;
 }
 
+function hexToRgb(hex: string) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
+  }
+  
+function getTextColor(hex: string) {
+    const rgb = hexToRgb(hex);
+    if (!rgb) return '#000000';
+    // Formula to determine brightness (from WCAG)
+    const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+    return brightness > 128 ? '#000000' : '#FFFFFF';
+}
+
 export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [categories, setCategories] = useState(initialCategories);
+    const [newCategoryName, setNewCategoryName] = useState('');
+    const [newCategoryColor, setNewCategoryColor] = useState('#a855f7');
+
 
     const form = useForm<TaskFormValues>({
         resolver: zodResolver(taskFormSchema),
@@ -97,12 +121,27 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
         form.reset();
         setIsOpen(false);
     }
+
+    const handleAddCategory = () => {
+        if (newCategoryName.trim() === '') return;
+        const newCategory: Category = {
+          id: `cat-${Date.now()}`,
+          name: newCategoryName,
+          color: newCategoryColor,
+        };
+        const updatedCategories = [...categories, newCategory];
+        setCategories(updatedCategories);
+        // Also update the global categories array so it's available for next task creations
+        initialCategories.push(newCategory);
+        setNewCategoryName('');
+        setNewCategoryColor('#a855f7');
+      };
     
     const handleOpenChange = (open: boolean) => {
-        if (open) {
-            // Refresh categories when dialog opens
-            setCategories([...initialCategories]);
+        if (!open) {
+            form.reset();
         }
+        setCategories([...initialCategories]);
         setIsOpen(open);
     }
 
@@ -234,51 +273,75 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
                                     )}
                                 />
                                 </div>
-                                <FormField
-                                    control={form.control}
-                                    name="categoryIds"
-                                    render={() => (
-                                        <FormItem>
-                                        <FormLabel>Categories</FormLabel>
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                                        {categories.map((item) => (
-                                            <FormField
-                                            key={item.id}
-                                            control={form.control}
-                                            name="categoryIds"
-                                            render={({ field }) => {
-                                                return (
-                                                <FormItem
-                                                    key={item.id}
-                                                    className="flex flex-row items-start space-x-3 space-y-0"
-                                                >
-                                                    <FormControl>
-                                                    <Checkbox
-                                                        checked={field.value?.includes(item.id)}
-                                                        onCheckedChange={(checked) => {
-                                                        return checked
-                                                            ? field.onChange([...(field.value || []), item.id])
-                                                            : field.onChange(
-                                                                field.value?.filter(
-                                                                (value) => value !== item.id
+                                <div className="space-y-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="categoryIds"
+                                        render={() => (
+                                            <FormItem>
+                                            <div className="mb-4">
+                                                <FormLabel>Categories</FormLabel>
+                                                <p className="text-sm text-muted-foreground">Select existing categories or add a new one.</p>
+                                            </div>
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                            {categories.map((item) => (
+                                                <FormField
+                                                key={item.id}
+                                                control={form.control}
+                                                name="categoryIds"
+                                                render={({ field }) => {
+                                                    return (
+                                                    <FormItem
+                                                        key={item.id}
+                                                        className="flex flex-row items-center space-x-3 space-y-0"
+                                                    >
+                                                        <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value?.includes(item.id)}
+                                                            onCheckedChange={(checked) => {
+                                                            return checked
+                                                                ? field.onChange([...(field.value || []), item.id])
+                                                                : field.onChange(
+                                                                    field.value?.filter(
+                                                                    (value) => value !== item.id
+                                                                    )
                                                                 )
-                                                            )
-                                                        }}
-                                                    />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal">
-                                                    {item.name}
-                                                    </FormLabel>
-                                                </FormItem>
-                                                )
-                                            }}
+                                                            }}
+                                                        />
+                                                        </FormControl>
+                                                        <FormLabel className="font-normal flex items-center">
+                                                            <Badge style={{ backgroundColor: item.color, color: getTextColor(item.color), borderColor: item.color }} variant="outline" className="mr-2 h-5" />
+                                                            {item.name}
+                                                        </FormLabel>
+                                                    </FormItem>
+                                                    )
+                                                }}
+                                                />
+                                            ))}
+                                            </div>
+                                            <FormMessage />
+                                        </FormItem>
+                                        )}
+                                    />
+                                    <Separator />
+                                    <div>
+                                        <Label className="text-sm font-medium">Add New Category</Label>
+                                        <div className="flex gap-2 mt-2">
+                                            <Input
+                                                value={newCategoryName}
+                                                onChange={(e) => setNewCategoryName(e.target.value)}
+                                                placeholder="New category name"
                                             />
-                                        ))}
+                                            <Input
+                                                type="color"
+                                                value={newCategoryColor}
+                                                onChange={(e) => setNewCategoryColor(e.target.value)}
+                                                className="w-12 h-10 p-1"
+                                            />
+                                            <Button type="button" onClick={handleAddCategory}>Add</Button>
                                         </div>
-                                        <FormMessage />
-                                    </FormItem>
-                                    )}
-                                />
+                                    </div>
+                                </div>
                                 <div>
                                     <FormLabel>Subtasks</FormLabel>
                                     <div className="space-y-2 mt-2">
