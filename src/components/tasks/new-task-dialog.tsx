@@ -151,7 +151,7 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
     return (
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="w-full max-w-md">
+            <DialogContent className="w-[90vw] md:w-[70vw] max-w-2xl">
                 <DialogHeader>
                     <DialogTitle>Create New Task</DialogTitle>
                     <DialogDescription>
