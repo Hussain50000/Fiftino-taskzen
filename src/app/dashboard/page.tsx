@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/page-header';
@@ -21,30 +21,65 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+
+// This would be a server action in a real app
+const createProject = async (name: string): Promise<Project> => {
+  console.log("Creating project", name);
+  // Simulate network delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  const randomId = Math.random().toString(36).substring(2, 8);
+
+  const newProject: Project = {
+    id: `${slug}-${randomId}`,
+    name: name,
+    taskCount: 0,
+    imageUrl: `https://placehold.co/600x400?text=${encodeURIComponent(name)}`
+  };
+  
+  // In a real app, you would save this to your database.
+  // For this demo, we're pushing to an in-memory array.
+  initialProjects.push(newProject);
+
+  return newProject;
+};
+
 
 export default function ProjectsDashboardPage() {
   const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [newProjectName, setNewProjectName] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleCreateProject = () => {
     if (newProjectName.trim() === "") return;
 
-    const newProject: Project = {
-      id: `proj-${Date.now()}`,
-      name: newProjectName,
-      taskCount: 0,
-      imageUrl: `https://placehold.co/600x400?text=${encodeURIComponent(newProjectName)}`
-    };
+    startTransition(async () => {
+      try {
+        const newProject = await createProject(newProjectName);
+        
+        const updatedProjects = [...projects, newProject];
+        setProjects(updatedProjects);
 
-    const updatedProjects = [...projects, newProject];
-    setProjects(updatedProjects);
-    initialProjects.push(newProject);
-
-    setNewProjectName("");
-    setIsDialogOpen(false);
-    router.push(`/projects/${newProject.id}`);
+        setNewProjectName("");
+        setIsDialogOpen(false);
+        toast({
+          title: "Project Created",
+          description: `The project "${newProject.name}" has been successfully created.`,
+        });
+        router.push(`/projects/${newProject.id}`);
+      } catch (error) {
+         toast({
+          title: "Error",
+          description: "Failed to create project. Please try again.",
+          variant: "destructive"
+        });
+      }
+    });
   };
   
   return (
@@ -72,11 +107,14 @@ export default function ProjectsDashboardPage() {
                 value={newProjectName}
                 onChange={(e) => setNewProjectName(e.target.value)}
                 placeholder="e.g. Q3 Marketing Campaign"
+                disabled={isPending}
               />
             </div>
             <DialogFooter>
-              <Button variant="secondary" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-              <Button onClick={handleCreateProject}>Create Project</Button>
+              <Button variant="secondary" onClick={() => setIsDialogOpen(false)} disabled={isPending}>Cancel</Button>
+              <Button onClick={handleCreateProject} disabled={isPending}>
+                {isPending ? "Creating..." : "Create Project"}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

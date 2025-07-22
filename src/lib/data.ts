@@ -17,8 +17,8 @@ export let categories: Category[] = [
 export const statuses: Status[] = ['Pending', 'In Progress', 'Complete'];
 
 export let projects: Project[] = [
-    { id: 'proj-1', name: 'TaskZen App Development', taskCount: 8, imageUrl: 'https://placehold.co/600x400' },
-    { id: 'proj-2', name: 'Website Redesign', taskCount: 0, imageUrl: 'https://placehold.co/600x400' },
+    { id: 'taskzen-app-development-a1b2c3', name: 'TaskZen App Development', taskCount: 8, imageUrl: 'https://placehold.co/600x400' },
+    { id: 'website-redesign-d4e5f6', name: 'Website Redesign', taskCount: 0, imageUrl: 'https://placehold.co/600x400' },
 ];
 
 export let tasks: Task[] = [
@@ -35,7 +35,7 @@ export let tasks: Task[] = [
       { id: 'sub-1-2', text: 'Add Google provider', completed: false },
       { id: 'sub-1-3', text: 'Create sign-in page UI', completed: false },
     ],
-    projectId: 'proj-1',
+    projectId: 'taskzen-app-development-a1b2c3',
   },
   {
     id: 'task-2',
@@ -50,7 +50,7 @@ export let tasks: Task[] = [
       { id: 'sub-2-2', text: 'Tablet view mockup', completed: false },
       { id: 'sub-2-3', text: 'Desktop view mockup', completed: false },
     ],
-    projectId: 'proj-1',
+    projectId: 'taskzen-app-development-a1b2c3',
   },
   {
     id: 'task-3',
@@ -61,7 +61,7 @@ export let tasks: Task[] = [
     dueDate: new Date(new Date().setDate(new Date().getDate() + 1)),
     categories: [categories[3], categories[1]],
     subtasks: [],
-    projectId: 'proj-1',
+    projectId: 'taskzen-app-development-a1b2c3',
   },
   {
     id: 'task-4',
@@ -75,7 +75,7 @@ export let tasks: Task[] = [
       { id: 'sub-4-1', text: 'Create deploy.yml', completed: true },
       { id: 'sub-4-2', text: 'Add Vercel secrets to GitHub', completed: true },
     ],
-    projectId: 'proj-1',
+    projectId: 'taskzen-app-development-a1b2c3',
   },
   {
     id: 'task-5',
@@ -84,7 +84,7 @@ export let tasks: Task[] = [
     status: 'Pending',
     categories: [categories[1]],
     subtasks: [],
-    projectId: 'proj-1',
+    projectId: 'taskzen-app-development-a1b2c3',
   },
   {
     id: 'task-6',
@@ -97,7 +97,7 @@ export let tasks: Task[] = [
       { id: 'sub-6-1', text: 'Write tutorial copy', completed: false },
       { id: 'sub-6-2', text: 'Implement tutorial component', completed: false },
     ],
-    projectId: 'proj-1',
+    projectId: 'taskzen-app-development-a1b2c3',
   },
     {
     id: 'task-7',
@@ -111,7 +111,7 @@ export let tasks: Task[] = [
       { id: 'sub-7-1', text: 'Replace `<img>` with `<Image>`', completed: false },
       { id: 'sub-7-2', text: 'Audit LCP score', completed: false },
     ],
-    projectId: 'proj-1',
+    projectId: 'taskzen-app-development-a1b2c3',
   },
   {
     id: 'task-8',
@@ -125,6 +125,6 @@ export let tasks: Task[] = [
         { id: 'sub-8-1', text: 'Finalize color palette', completed: true },
         { id: 'sub-8-2', text: 'Implement new layout', completed: true },
     ],
-    projectId: 'proj-1',
+    projectId: 'taskzen-app-development-a1b2c3',
   },
 ];
