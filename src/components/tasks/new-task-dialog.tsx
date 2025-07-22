@@ -151,7 +151,7 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
     return (
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="w-[90vw] md:w-[70vw] max-w-2xl">
+            <DialogContent className="w-[95vw] sm:w-full sm:max-w-2xl flex flex-col max-h-[90vh]">
                 <DialogHeader>
                     <DialogTitle>Create New Task</DialogTitle>
                     <DialogDescription>
@@ -159,8 +159,8 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <ScrollArea className="h-[70vh] pr-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-grow min-h-0">
+                        <ScrollArea className="flex-grow pr-6 -mr-6">
                             <div className="space-y-4">
                                 <FormField
                                     control={form.control}
@@ -380,7 +380,7 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
                                 </div>
                             </div>
                         </ScrollArea>
-                        <DialogFooter className="mt-6 pt-4 border-t">
+                        <DialogFooter className="mt-6 pt-4 border-t flex-shrink-0">
                             <DialogClose asChild>
                                 <Button type="button" variant="secondary">Cancel</Button>
                             </DialogClose>
@@ -392,3 +392,5 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
         </Dialog>
     )
 }
+
+    
