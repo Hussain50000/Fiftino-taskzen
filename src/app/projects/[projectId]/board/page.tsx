@@ -117,8 +117,8 @@ export default function ProjectBoardPage() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader title={project.name} onTaskCreate={handleTaskCreate} />
-      <div className="flex-grow p-4 overflow-x-auto">
-        <div className="flex gap-6 h-full">
+      <div className="flex-grow p-4 overflow-auto">
+        <div className="grid grid-flow-col auto-cols-max gap-6 h-full">
           {columns.map((column) => (
             <div 
               key={column.id} 
