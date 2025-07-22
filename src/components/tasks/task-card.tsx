@@ -9,6 +9,22 @@ interface TaskCardProps {
   task: Task;
 }
 
+function hexToRgb(hex: string) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+function getTextColor(hex: string) {
+    const rgb = hexToRgb(hex);
+    if (!rgb) return '#000000';
+    const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+    return brightness > 128 ? '#000000' : '#FFFFFF';
+}
+
 export function TaskCard({ task }: TaskCardProps) {
   const completedSubtasks = task.subtasks.filter(s => s.completed).length;
 
@@ -45,7 +61,7 @@ export function TaskCard({ task }: TaskCardProps) {
         {task.categories.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-3">
             {task.categories.map((category) => (
-              <Badge key={category.id} className={category.color} variant="outline">
+              <Badge key={category.id} style={{ backgroundColor: category.color, color: getTextColor(category.color), borderColor: category.color }} variant="outline">
                 {category.name}
               </Badge>
             ))}

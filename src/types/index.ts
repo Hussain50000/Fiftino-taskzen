@@ -9,7 +9,7 @@ export type User = {
 export type Category = {
   id:string;
   name: string;
-  color: string; // e.g. "bg-blue-100 text-blue-800"
+  color: string; // hex color code
 };
 
 export type Subtask = {

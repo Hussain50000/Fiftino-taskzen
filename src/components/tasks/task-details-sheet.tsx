@@ -31,6 +31,23 @@ interface TaskDetailsSheetProps {
   onUpdateTask: (task: Task) => void;
 }
 
+function hexToRgb(hex: string) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+function getTextColor(hex: string) {
+    const rgb = hexToRgb(hex);
+    if (!rgb) return '#000000';
+    // Formula to determine brightness (from WCAG)
+    const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+    return brightness > 128 ? '#000000' : '#FFFFFF';
+}
+
 export function TaskDetailsSheet({ task, open, onOpenChange, onUpdateTask }: TaskDetailsSheetProps) {
   const [editedTask, setEditedTask] = useState<Task>(task);
 
@@ -141,7 +158,7 @@ export function TaskDetailsSheet({ task, open, onOpenChange, onUpdateTask }: Tas
                     <Label>Categories</Label>
                     <div className="flex flex-wrap gap-2 min-h-[40px] items-center">
                         {editedTask.categories.length > 0 ? editedTask.categories.map(cat => (
-                            <Badge key={cat.id} className={cat.color} variant="outline">{cat.name}</Badge>
+                            <Badge key={cat.id} style={{backgroundColor: cat.color, color: getTextColor(cat.color), borderColor: cat.color}} variant="outline">{cat.name}</Badge>
                         )) : <span className="text-sm text-muted-foreground">No categories</span>}
                     </div>
                 </div>

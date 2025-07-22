@@ -19,6 +19,23 @@ import { Badge } from '@/components/ui/badge';
 import { CalendarDays, UserCircle } from 'lucide-react';
 import { format } from 'date-fns';
 
+function hexToRgb(hex: string) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+function getTextColor(hex: string) {
+    const rgb = hexToRgb(hex);
+    if (!rgb) return '#000000';
+    // Formula to determine brightness (from WCAG)
+    const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+    return brightness > 128 ? '#000000' : '#FFFFFF';
+}
+
 export default function ListPage() {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -90,7 +107,7 @@ export default function ListPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         {task.categories.map(cat => (
-                          <Badge key={cat.id} className={cat.color} variant="outline">{cat.name}</Badge>
+                          <Badge key={cat.id} style={{ backgroundColor: cat.color, color: getTextColor(cat.color), borderColor: cat.color }} variant="outline">{cat.name}</Badge>
                         ))}
                       </div>
                     </div>

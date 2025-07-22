@@ -16,19 +16,27 @@ import { Badge } from '@/components/ui/badge';
 import { categories as initialCategories } from '@/lib/data';
 import { Label } from '../ui/label';
 
-const colorOptions = [
-    { name: 'Sky', class: 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200 border border-sky-200 dark:border-sky-700' },
-    { name: 'Green', class: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border border-green-200 dark:border-green-700' },
-    { name: 'Amber', class: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 border border-amber-200 dark:border-amber-700' },
-    { name: 'Red', class: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border border-red-200 dark:border-red-700' },
-    { name: 'Indigo', class: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200 border border-indigo-200 dark:border-indigo-700' },
-    { name: 'Pink', class: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200 border border-pink-200 dark:border-pink-700' },
-];
+function hexToRgb(hex: string) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+function getTextColor(hex: string) {
+    const rgb = hexToRgb(hex);
+    if (!rgb) return '#000000';
+    // Formula to determine brightness (from WCAG)
+    const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+    return brightness > 128 ? '#000000' : '#FFFFFF';
+}
 
 export function CategoryManager({ children }: { children: React.ReactNode }) {
   const [categories, setCategories] = useState(initialCategories);
   const [newCategoryName, setNewCategoryName] = useState('');
-  const [selectedColor, setSelectedColor] = useState(colorOptions[0].class);
+  const [selectedColor, setSelectedColor] = useState('#a855f7');
 
   const handleAddCategory = () => {
     if (newCategoryName.trim() === '') return;
@@ -37,11 +45,13 @@ export function CategoryManager({ children }: { children: React.ReactNode }) {
       name: newCategoryName,
       color: selectedColor,
     };
-    setCategories([...categories, newCategory]);
+    const updatedCategories = [...categories, newCategory];
+    setCategories(updatedCategories);
     // Note: In a real app, this would also be persisted to the backend.
     // For this scaffold, we're just updating local state.
-    initialCategories.push(newCategory); // Mutating imported data for demo purposes
+    initialCategories.splice(0, initialCategories.length, ...updatedCategories);
     setNewCategoryName('');
+    setSelectedColor('#a855f7')
   };
 
   return (
@@ -51,7 +61,7 @@ export function CategoryManager({ children }: { children: React.ReactNode }) {
         <DialogHeader>
           <DialogTitle>Manage Categories</DialogTitle>
           <DialogDescription>
-            Add, edit, or remove categories to organize your tasks.
+            Add new categories to organize your tasks.
           </DialogDescription>
         </DialogHeader>
 
@@ -60,7 +70,7 @@ export function CategoryManager({ children }: { children: React.ReactNode }) {
                 <Label className="text-sm font-medium">Existing Categories</Label>
                 <div className="flex flex-wrap gap-2 mt-2">
                     {categories.map((cat) => (
-                        <Badge key={cat.id} className={cat.class || cat.color} variant="outline">{cat.name}</Badge>
+                        <Badge key={cat.id} style={{ backgroundColor: cat.color, color: getTextColor(cat.color), borderColor: cat.color }} variant="outline">{cat.name}</Badge>
                     ))}
                 </div>
             </div>
@@ -78,12 +88,14 @@ export function CategoryManager({ children }: { children: React.ReactNode }) {
             </div>
              <div className="space-y-2">
                 <Label>Color</Label>
-                <div className="flex flex-wrap gap-2">
-                    {colorOptions.map(color => (
-                        <button key={color.name} onClick={() => setSelectedColor(color.class)} className={`p-1 rounded-md border-2 ${selectedColor === color.class ? 'border-primary' : 'border-transparent'}`}>
-                             <Badge className={color.class} variant="outline">{color.name}</Badge>
-                        </button>
-                    ))}
+                <div className="flex items-center gap-2">
+                    <Input
+                        type="color"
+                        value={selectedColor}
+                        onChange={(e) => setSelectedColor(e.target.value)}
+                        className="w-12 h-10 p-1"
+                    />
+                    <Badge style={{ backgroundColor: selectedColor, color: getTextColor(selectedColor) }} variant="outline">{newCategoryName || "New Category"}</Badge>
                 </div>
              </div>
         </div>

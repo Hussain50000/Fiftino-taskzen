@@ -7,11 +7,11 @@ export const users: User[] = [
 ];
 
 export let categories: Category[] = [
-  { id: 'cat-1', name: 'Frontend', color: 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200 border border-sky-200 dark:border-sky-700' },
-  { id: 'cat-2', name: 'Backend', color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border border-green-200 dark:border-green-700' },
-  { id: 'cat-3', name: 'Design', color: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 border border-amber-200 dark:border-amber-700' },
-  { id: 'cat-4', name: 'Bug', color: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border border-red-200 dark:border-red-700' },
-  { id: 'cat-5', name: 'Feature', color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200 border border-indigo-200 dark:border-indigo-700' },
+  { id: 'cat-1', name: 'Frontend', color: '#86efac' },
+  { id: 'cat-2', name: 'Backend', color: '#6ee7b7' },
+  { id: 'cat-3', name: 'Design', color: '#fcd34d' },
+  { id: 'cat-4', name: 'Bug', color: '#fca5a5' },
+  { id: 'cat-5', name: 'Feature', color: '#a5b4fc' },
 ];
 
 export const statuses: Status[] = ['Pending', 'In Progress', 'Complete'];
