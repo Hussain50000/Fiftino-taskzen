@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import {
   tasks as initialTasks,
   statuses as initialStatuses,
@@ -38,21 +39,23 @@ function getTextColor(hex: string) {
     return brightness > 128 ? '#000000' : '#FFFFFF';
 }
 
-export default function ProjectListPage({ params }: { params: { projectId: string } }) {
+export default function ProjectListPage() {
+  const params = useParams();
+  const projectId = params.projectId as string;
   const [project, setProject] = useState<Project | undefined>();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   useEffect(() => {
-    const currentProject = initialProjects.find(p => p.id === params.projectId);
+    const currentProject = initialProjects.find(p => p.id === projectId);
     if (currentProject) {
         setProject(currentProject);
-        const projectTasks = initialTasks.filter(t => t.projectId === params.projectId);
+        const projectTasks = initialTasks.filter(t => t.projectId === projectId);
         setTasks(projectTasks);
     } else {
         console.error("Project not found!");
     }
-  }, [params.projectId]);
+  }, [projectId]);
 
   const handleTaskUpdate = (updatedTask: Task) => {
     setTasks((prevTasks) =>
@@ -65,10 +68,10 @@ export default function ProjectListPage({ params }: { params: { projectId: strin
 
   const handleTaskCreate = (newTask: Omit<Task, 'id' | 'projectId'>) => {
     const newId = `task-${Date.now()}`;
-    const taskWithId: Task = { ...newTask, id: newId, projectId: params.projectId };
+    const taskWithId: Task = { ...newTask, id: newId, projectId: projectId };
     setTasks(prev => [...prev, taskWithId]);
     initialTasks.push(taskWithId);
-    const projectIndex = initialProjects.findIndex(p => p.id === params.projectId);
+    const projectIndex = initialProjects.findIndex(p => p.id === projectId);
     if (projectIndex !== -1) {
         initialProjects[projectIndex].taskCount++;
     }

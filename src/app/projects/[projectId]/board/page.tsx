@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { notFound, useParams } from 'next/navigation';
 import {
   tasks as initialTasks,
   statuses as initialStatuses,
@@ -12,26 +13,28 @@ import { PageHeader } from '@/components/page-header';
 import { TaskCard } from '@/components/tasks/task-card';
 import { TaskDetailsSheet } from '@/components/tasks/task-details-sheet';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { notFound } from 'next/navigation';
 
-export default function ProjectBoardPage({ params }: { params: { projectId: string } }) {
+export default function ProjectBoardPage() {
+  const params = useParams();
+  const projectId = params.projectId as string;
+  
   const [project, setProject] = useState<Project | undefined>();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
 
   useEffect(() => {
-    const currentProject = initialProjects.find(p => p.id === params.projectId);
+    const currentProject = initialProjects.find(p => p.id === projectId);
     if (currentProject) {
         setProject(currentProject);
-        const projectTasks = initialTasks.filter(t => t.projectId === params.projectId);
+        const projectTasks = initialTasks.filter(t => t.projectId === projectId);
         setTasks(projectTasks);
     } else {
         // Handle project not found, maybe redirect or show a 404
         // For now, just log it. In a real app, you'd handle this more gracefully.
         console.error("Project not found!");
     }
-  }, [params.projectId]);
+  }, [projectId]);
 
 
   const handleTaskUpdate = (updatedTask: Task) => {
@@ -49,12 +52,12 @@ export default function ProjectBoardPage({ params }: { params: { projectId: stri
 
   const handleTaskCreate = (newTask: Omit<Task, 'id' | 'projectId'>) => {
     const newId = `task-${Date.now()}`;
-    const taskWithId: Task = { ...newTask, id: newId, projectId: params.projectId };
+    const taskWithId: Task = { ...newTask, id: newId, projectId: projectId };
     setTasks(prev => [...prev, taskWithId]);
      // Also update the global tasks array
     initialTasks.push(taskWithId);
     // Update project task count
-    const projectIndex = initialProjects.findIndex(p => p.id === params.projectId);
+    const projectIndex = initialProjects.findIndex(p => p.id === projectId);
     if (projectIndex !== -1) {
         initialProjects[projectIndex].taskCount++;
     }
