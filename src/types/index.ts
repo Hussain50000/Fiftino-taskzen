@@ -1,4 +1,4 @@
-export type Status = 'Backlog' | 'Todo' | 'In Progress' | 'Done';
+export type Status = 'Pending' | 'In Progress' | 'Complete';
 
 export type User = {
   id: string;

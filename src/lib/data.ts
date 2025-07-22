@@ -14,7 +14,7 @@ export let categories: Category[] = [
   { id: 'cat-5', name: 'Feature', color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200 border border-indigo-200 dark:border-indigo-700' },
 ];
 
-export const statuses: Status[] = ['Backlog', 'Todo', 'In Progress', 'Done'];
+export const statuses: Status[] = ['Pending', 'In Progress', 'Complete'];
 
 export let tasks: Task[] = [
   {
@@ -35,7 +35,7 @@ export let tasks: Task[] = [
     id: 'task-2',
     title: 'Design the new dashboard layout',
     description: 'Create Figma mockups for the new responsive dashboard.',
-    status: 'Todo',
+    status: 'Pending',
     assignee: users[2],
     dueDate: new Date(new Date().setDate(new Date().getDate() + 5)),
     categories: [categories[2]],
@@ -59,7 +59,7 @@ export let tasks: Task[] = [
     id: 'task-4',
     title: 'Setup CI/CD pipeline',
     description: 'Configure GitHub Actions to automatically deploy to Vercel.',
-    status: 'Done',
+    status: 'Complete',
     assignee: users[0],
     dueDate: new Date(new Date().setDate(new Date().getDate() - 2)),
     categories: [categories[1]],
@@ -72,7 +72,7 @@ export let tasks: Task[] = [
     id: 'task-5',
     title: 'Refactor database schema',
     description: 'Normalize the `products` table and add indices for performance.',
-    status: 'Backlog',
+    status: 'Pending',
     categories: [categories[1]],
     subtasks: [],
   },
@@ -80,7 +80,7 @@ export let tasks: Task[] = [
     id: 'task-6',
     title: 'Create onboarding tutorial',
     description: 'Develop a multi-step tutorial for new users.',
-    status: 'Todo',
+    status: 'Pending',
     assignee: users[2],
     categories: [categories[0], categories[2]],
     subtasks: [
@@ -92,7 +92,7 @@ export let tasks: Task[] = [
     id: 'task-7',
     title: 'Optimize image loading performance',
     description: 'Use next/image for all user-facing images and implement lazy loading.',
-    status: 'Todo',
+    status: 'Pending',
     assignee: users[0],
     dueDate: new Date(new Date().setDate(new Date().getDate() + 10)),
     categories: [categories[0]],
@@ -105,7 +105,7 @@ export let tasks: Task[] = [
     id: 'task-8',
     title: 'User profile page redesign',
     description: 'Redesign the user profile page to be more modern and intuitive.',
-    status: 'Done',
+    status: 'Complete',
     assignee: users[2],
     dueDate: new Date(new Date().setDate(new Date().getDate() - 5)),
     categories: [categories[2]],

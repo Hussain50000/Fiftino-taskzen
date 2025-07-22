@@ -62,7 +62,7 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
         defaultValues: {
             title: '',
             description: '',
-            status: 'Todo',
+            status: 'Pending',
             assigneeId: undefined,
             categoryIds: [],
             dueDate: undefined,
@@ -317,5 +317,3 @@ export function NewTaskDialog({ children, onTaskCreate }: NewTaskDialogProps) {
         </Dialog>
     )
 }
-
-    

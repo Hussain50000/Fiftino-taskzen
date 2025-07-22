@@ -49,7 +49,7 @@ export default function ListPage() {
     <div className="flex flex-col h-full">
       <PageHeader title="List" onTaskCreate={handleTaskCreate} />
       <div className="flex-grow p-4 overflow-y-auto">
-        <Accordion type="multiple" defaultValue={initialStatuses} className="space-y-4">
+        <Accordion type="multiple" defaultValue={initialStatuses as string[]} className="space-y-4">
           {groupedTasks.map(({ status, tasks }) => (
             tasks.length > 0 && (
               <AccordionItem value={status} key={status} className="border-none">
