@@ -67,11 +67,11 @@ export default function BoardPage() {
     <div className="flex flex-col h-full">
       <PageHeader title="Board" onTaskCreate={handleTaskCreate} />
       <div className="flex-grow p-4 overflow-x-auto">
-        <div className="flex gap-6 items-start">
+        <div className="flex gap-6 h-full">
           {columns.map((column) => (
             <div 
               key={column.id} 
-              className="w-80 shrink-0"
+              className="w-80 shrink-0 flex flex-col"
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, column.id as Status)}
             >
