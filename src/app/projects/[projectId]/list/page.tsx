@@ -112,7 +112,7 @@ export default function ProjectListPage() {
 
   if (!project) {
     return (
-      <div className="flex-grow flex items-center justify-center h-full">
+      <div className="flex-grow flex items-center justify-center">
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="relative flex items-center justify-center">
             <div className="absolute h-24 w-24 md:h-32 md:w-32 rounded-full bg-primary/10 animate-ping" />
